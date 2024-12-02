@@ -30,4 +30,10 @@ dependencyResolutionManagement {
 rootProject.name = "CatboxUploader"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-include(":app")
+include(
+    ":app",
+    ":core:usecase:usecase-api",
+    ":data",
+    ":domain:models",
+    ":domain:usecase"
+)
