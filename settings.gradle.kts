@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("gradle/plugins")
     repositories {
         google {
             content {
@@ -10,6 +11,13 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+    resolutionStrategy {
+        eachPlugin {
+            when (requested.id.id) {
+                "dagger.hilt.android.plugin" -> useModule("com.google.dagger:hilt-android-gradle-plugin:${requested.version}")
+            }
+        }
+    }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
@@ -20,5 +28,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "CatboxUploader"
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
- 

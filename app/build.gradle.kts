@@ -1,6 +1,6 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    id("battman.android.application")
+    id("battman.android.hilt")
 }
 
 android {
