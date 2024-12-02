@@ -33,7 +33,9 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(
     ":app",
     ":core:usecase:usecase-api",
-    ":data",
+    ":data:countries:countries-api",
+    ":data:countries:countries-di",
+    ":data:countries:countries-impl",
     ":domain:models",
     ":domain:usecase"
 )

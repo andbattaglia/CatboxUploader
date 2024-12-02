@@ -26,6 +26,10 @@
             <option value="$PROJECT_DIR$/core/usecase" />
             <option value="$PROJECT_DIR$/core/usecase/usecase-api" />
             <option value="$PROJECT_DIR$/data" />
+            <option value="$PROJECT_DIR$/data/countries" />
+            <option value="$PROJECT_DIR$/data/countries/countries-api" />
+            <option value="$PROJECT_DIR$/data/countries/countries-di" />
+            <option value="$PROJECT_DIR$/data/countries/countries-impl" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/domain/models" />
             <option value="$PROJECT_DIR$/domain/usecase" />
