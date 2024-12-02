@@ -32,7 +32,7 @@
             <option value="$PROJECT_DIR$/data/countries/countries-impl" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/domain/models" />
-            <option value="$PROJECT_DIR$/domain/usecase" />
+            <option value="$PROJECT_DIR$/domain/usecases" />
             <option value="$PROJECT_DIR$/gradle/plugins" />
             <option value="$PROJECT_DIR$/gradle/plugins/conventions" />
           </set>

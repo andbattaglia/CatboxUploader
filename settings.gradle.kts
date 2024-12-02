@@ -37,5 +37,5 @@ include(
     ":data:countries:countries-di",
     ":data:countries:countries-impl",
     ":domain:models",
-    ":domain:usecase"
+    ":domain:usecases"
 )
