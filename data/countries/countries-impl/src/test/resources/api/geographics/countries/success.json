@@ -1,0 +1,34 @@
+[
+  {
+    "iso": 248,
+    "isoAlpha2": "AX",
+    "isoAlpha3": "ALA",
+    "name": "Aland Islands",
+    "phonePrefix": "+358-18",
+    "phoneRegex": "^[0-9]{8,15}$"
+  },
+  {
+    "iso": 8,
+    "isoAlpha2": "AL",
+    "isoAlpha3": "ALB",
+    "name": "Albania",
+    "phonePrefix": "+355",
+    "phoneRegex": "^[0-9]{8,15}$"
+  },
+  {
+    "iso": 12,
+    "isoAlpha2": "DZ",
+    "isoAlpha3": "DZA",
+    "name": "Algeria",
+    "phonePrefix": "+213",
+    "phoneRegex": "^[0-9]{8,15}$"
+  },
+  {
+    "iso": 16,
+    "isoAlpha2": "AS",
+    "isoAlpha3": "ASM",
+    "name": "American Samoa",
+    "phonePrefix": "+1-684",
+    "phoneRegex": "^[0-9]{8,15}$"
+  }
+]
