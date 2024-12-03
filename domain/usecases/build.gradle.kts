@@ -6,6 +6,8 @@ dependencies {
     api(projects.core.usecase.usecaseApi)
     api(projects.domain.models)
 
+    implementation(projects.data.countries.countriesApi)
+
     implementation(libs.arrow.core)
     implementation(libs.javax.inject)
 }
