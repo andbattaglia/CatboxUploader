@@ -10,4 +10,6 @@ android {
 dependencies {
     api(projects.data.countries.countriesApi)
     api(projects.data.countries.countriesImpl)
+
+    implementation(projects.core.network.networkApi)
 }
