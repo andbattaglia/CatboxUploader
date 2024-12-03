@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
@@ -23,6 +24,15 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/core/dispatcher" />
+            <option value="$PROJECT_DIR$/core/dispatcher/dispatcher-api" />
+            <option value="$PROJECT_DIR$/core/dispatcher/dispatcher-di" />
+            <option value="$PROJECT_DIR$/core/network" />
+            <option value="$PROJECT_DIR$/core/network/network-api" />
+            <option value="$PROJECT_DIR$/core/network/network-di" />
+            <option value="$PROJECT_DIR$/core/network/network-test" />
+            <option value="$PROJECT_DIR$/core/test" />
+            <option value="$PROJECT_DIR$/core/test/test-jvm" />
             <option value="$PROJECT_DIR$/core/usecase" />
             <option value="$PROJECT_DIR$/core/usecase/usecase-api" />
             <option value="$PROJECT_DIR$/data" />
@@ -30,6 +40,7 @@
             <option value="$PROJECT_DIR$/data/countries/countries-api" />
             <option value="$PROJECT_DIR$/data/countries/countries-di" />
             <option value="$PROJECT_DIR$/data/countries/countries-impl" />
+            <option value="$PROJECT_DIR$/data/network-ext" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/domain/models" />
             <option value="$PROJECT_DIR$/domain/usecases" />
