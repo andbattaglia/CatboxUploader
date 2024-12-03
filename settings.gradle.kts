@@ -37,6 +37,7 @@ include(
     ":core:network:network-api",
     ":core:network:network-di",
     ":core:network:network-test",
+    ":core:ui:compose",
     ":core:test:test-jvm",
     ":core:usecase:usecase-api",
     ":data:countries:countries-api",

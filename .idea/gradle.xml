@@ -33,6 +33,8 @@
             <option value="$PROJECT_DIR$/core/network/network-test" />
             <option value="$PROJECT_DIR$/core/test" />
             <option value="$PROJECT_DIR$/core/test/test-jvm" />
+            <option value="$PROJECT_DIR$/core/ui" />
+            <option value="$PROJECT_DIR$/core/ui/compose" />
             <option value="$PROJECT_DIR$/core/usecase" />
             <option value="$PROJECT_DIR$/core/usecase/usecase-api" />
             <option value="$PROJECT_DIR$/data" />
