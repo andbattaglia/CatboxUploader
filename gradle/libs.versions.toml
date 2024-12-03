@@ -77,6 +77,10 @@ compose = [
     "androidx-lifecycle-runtime-compose",
     "androidx-lifecycle-viewmodel-compose",
 ]
+compose-navigation = [
+    "androidx-hilt-compose_navigation",
+    "androidx-navigation-compose",
+]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
