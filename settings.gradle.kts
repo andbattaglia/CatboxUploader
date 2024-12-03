@@ -38,6 +38,7 @@ include(
     ":core:network:network-di",
     ":core:network:network-test",
     ":core:ui:compose",
+    ":core:ui:mvi",
     ":core:ui:navigation",
     ":core:test:test-jvm",
     ":core:usecase:usecase-api",
@@ -46,5 +47,6 @@ include(
     ":data:countries:countries-impl",
     ":data:network-ext",
     ":domain:models",
-    ":domain:usecases"
+    ":domain:usecases",
+    ":features:select-country"
 )

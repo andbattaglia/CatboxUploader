@@ -35,6 +35,7 @@
             <option value="$PROJECT_DIR$/core/test/test-jvm" />
             <option value="$PROJECT_DIR$/core/ui" />
             <option value="$PROJECT_DIR$/core/ui/compose" />
+            <option value="$PROJECT_DIR$/core/ui/mvi" />
             <option value="$PROJECT_DIR$/core/ui/navigation" />
             <option value="$PROJECT_DIR$/core/usecase" />
             <option value="$PROJECT_DIR$/core/usecase/usecase-api" />
@@ -47,6 +48,8 @@
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/domain/models" />
             <option value="$PROJECT_DIR$/domain/usecases" />
+            <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/features/select-country" />
             <option value="$PROJECT_DIR$/gradle/plugins" />
             <option value="$PROJECT_DIR$/gradle/plugins/conventions" />
           </set>
