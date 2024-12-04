@@ -48,5 +48,6 @@ include(
     ":data:network-ext",
     ":domain:models",
     ":domain:usecases",
-    ":features:select-country"
+    ":features:select-country",
+    ":features:select-photos"
 )
