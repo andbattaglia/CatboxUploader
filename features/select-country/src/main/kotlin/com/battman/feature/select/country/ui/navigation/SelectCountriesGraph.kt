@@ -18,7 +18,7 @@ fun NavGraphBuilder.selectCountryScreen(
     composable(route = SELECT_COUNTRY_ROUTE) {
         SelectCountryScreen(
             viewModel = hiltViewModel(),
-            navigateToGallery = onNavigateToGallery,
+            navigateToGallery = { onNavigateToGallery() },
         )
     }
 }

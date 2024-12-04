@@ -45,7 +45,7 @@ abstract class MVIModel<S : MVIState, I : MVIIntent, E : MVIEvent> : ViewModel()
     abstract fun createInitialState(): S
 
     private val uiEvent = Channel<E>(Channel.BUFFERED)
-    private val uiIntent = MutableSharedFlow<I>()
+    private val uiIntent = MutableSharedFlow<I>(extraBufferCapacity = 64)
     private val uiState = MutableStateFlow(initialState)
 
     @Composable
