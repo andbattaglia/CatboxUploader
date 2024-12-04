@@ -8,10 +8,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /**
@@ -47,35 +44,35 @@ abstract class MVIModel<S : MVIState, I : MVIIntent, E : MVIEvent> : ViewModel()
     private val initialState: S by lazy { createInitialState() }
     abstract fun createInitialState(): S
 
-    private val _uiEvent = Channel<E>(Channel.BUFFERED)
-    private val _uiIntent = MutableSharedFlow<I>()
-    private val _uiState = MutableStateFlow(initialState)
+    private val uiEvent = Channel<E>(Channel.BUFFERED)
+    private val uiIntent = MutableSharedFlow<I>()
+    private val uiState = MutableStateFlow(initialState)
 
     @Composable
-    operator fun component1(): S = _uiState.collectAsStateWithLifecycle().value
-    operator fun component2(): Flow<E> = _uiEvent.receiveAsFlow()
-    operator fun component3(): IntentDispatcher<I> = { _uiIntent.tryEmit(it) }
+    operator fun component1(): S = uiState.collectAsStateWithLifecycle().value
+    operator fun component2(): Flow<E> = uiEvent.receiveAsFlow()
+    operator fun component3(): IntentDispatcher<I> = { uiIntent.tryEmit(it) }
 
     init {
         observeIntent()
     }
 
     val currentState: S
-        get() = _uiState.value
+        get() = uiState.value
 
     protected fun setState(reduce: S.() -> S) {
-        val newState = _uiState.value.reduce()
-        _uiState.value = newState
+        val newState = uiState.value.reduce()
+        uiState.value = newState
     }
 
     protected fun sendEvent(builder: () -> E) {
         val effectValue = builder()
-        _uiEvent.trySend(effectValue)
+        uiEvent.trySend(effectValue)
     }
 
     private fun observeIntent() {
         viewModelScope.launch {
-            _uiIntent.collect {
+            uiIntent.collect {
                 handleIntent(it)
             }
         }
