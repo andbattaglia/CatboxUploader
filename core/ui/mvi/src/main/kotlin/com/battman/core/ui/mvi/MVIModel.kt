@@ -1,4 +1,4 @@
-package com.battman.core.mvi
+package com.battman.core.ui.mvi
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -46,39 +47,35 @@ abstract class MVIModel<S : MVIState, I : MVIIntent, E : MVIEvent> : ViewModel()
     private val initialState: S by lazy { createInitialState() }
     abstract fun createInitialState(): S
 
-    private val uiEvent = Channel<E>(Channel.BUFFERED)
-    private val uiIntent = MutableSharedFlow<I>(extraBufferCapacity = 64)
-    private val uiState: StateFlow<S> by lazy {
-        handleState()
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                initialValue = initialState,
-            )
-    }
+    private val _uiEvent = Channel<E>(Channel.BUFFERED)
+    private val _uiIntent = MutableSharedFlow<I>()
+    private val _uiState = MutableStateFlow(initialState)
 
     @Composable
-    operator fun component1(): S = uiState.collectAsStateWithLifecycle().value
-    operator fun component2(): Flow<E> = uiEvent.receiveAsFlow()
-    operator fun component3(): IntentDispatcher<I> = { uiIntent.tryEmit(it) }
+    operator fun component1(): S = _uiState.collectAsStateWithLifecycle().value
+    operator fun component2(): Flow<E> = _uiEvent.receiveAsFlow()
+    operator fun component3(): IntentDispatcher<I> = { _uiIntent.tryEmit(it) }
 
     init {
         observeIntent()
     }
 
     val currentState: S
-        get() = uiState.value
+        get() = _uiState.value
 
-    abstract fun handleState(): Flow<S>
+    protected fun setState(reduce: S.() -> S) {
+        val newState = _uiState.value.reduce()
+        _uiState.value = newState
+    }
 
     protected fun sendEvent(builder: () -> E) {
         val effectValue = builder()
-        uiEvent.trySend(effectValue)
+        _uiEvent.trySend(effectValue)
     }
 
     private fun observeIntent() {
         viewModelScope.launch {
-            uiIntent.collect {
+            _uiIntent.collect {
                 handleIntent(it)
             }
         }
