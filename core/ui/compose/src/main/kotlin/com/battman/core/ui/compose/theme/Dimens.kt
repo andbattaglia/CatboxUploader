@@ -25,10 +25,12 @@ class Dimensions(
     val thickness_M: Dp,
     val thickness_L: Dp,
     val button_size_L: Dp,
+    val elevation: Dp,
+    val elevationNone: Dp = 0.dp,
     val minimumToolbarHeight: Dp = 52.dp,
 )
 
-val defaultDimensions = Dimensions(
+internal val defaultDimensions = Dimensions(
     spacing_3xs = 2.dp,
     spacing_2xs = 4.dp,
     spacing_xs = 8.dp,
@@ -49,6 +51,7 @@ val defaultDimensions = Dimensions(
     thickness_M = 2.dp,
     thickness_L = 4.dp,
     button_size_L = 60.dp,
+    elevation = 4.dp,
 )
 
 internal val LocalDimensions = staticCompositionLocalOf {
