@@ -33,5 +33,12 @@ dependencies {
     implementation(libs.androidx.core)
     implementation(libs.androidx.core.splashscreen)
 
+    implementation(projects.core.dispatcher.dispatcherDi)
+    implementation(projects.core.network.networkDi)
+    implementation(projects.core.ui.compose)
+    implementation(projects.core.ui.navigation)
+    implementation(projects.data.countries.countriesDi)
+    implementation(projects.features.selectCountry)
+
     implementation(libs.bundles.compose)
 }
