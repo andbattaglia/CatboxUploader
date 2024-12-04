@@ -39,6 +39,7 @@ dependencies {
     implementation(projects.core.ui.navigation)
     implementation(projects.data.countries.countriesDi)
     implementation(projects.features.selectCountry)
+    implementation(projects.features.selectPhotos)
 
     implementation(libs.bundles.compose)
 }

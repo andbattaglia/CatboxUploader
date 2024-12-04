@@ -19,6 +19,7 @@ import com.battman.core.ui.compose.theme.CatboxUploaderTheme.dimensions
 fun CuCard(
     modifier: Modifier = Modifier,
     cardContainerColor: Color = colors.surfaceContainer,
+    cardContainerRippleColor: Color = colors.primary,
     onClick: () -> Unit = {},
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -28,7 +29,9 @@ fun CuCard(
             .clip(shape)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = ripple(),
+                indication = ripple(
+                    color = cardContainerRippleColor,
+                ),
                 onClick = onClick,
             ),
         colors = CardDefaults.cardColors(

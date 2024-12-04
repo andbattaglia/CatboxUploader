@@ -8,6 +8,7 @@ import com.battman.core.ui.mvi.MVIModel
 import com.battman.feature.select.country.ui.SelectCountryContract.UiEvent
 import com.battman.feature.select.country.ui.SelectCountryContract.UiEvent.NavigateToGallery
 import com.battman.feature.select.country.ui.SelectCountryContract.UiIntent
+import com.battman.feature.select.country.ui.SelectCountryContract.UiIntent.OnCountryClick
 import com.battman.feature.select.country.ui.SelectCountryContract.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -21,9 +22,10 @@ internal class SelectCountryModel @Inject constructor(
     override fun createInitialState() =
         UiState(countries = emptyList())
 
-    override fun handleIntent(intent: UiIntent) = when (intent) {
-        is UiIntent.OnCountryClick -> performCountryClick(intent.iso)
-    }
+    override fun handleIntent(intent: UiIntent) =
+        when (intent) {
+            is OnCountryClick -> performCountryClick(intent.iso)
+        }
 
     init {
         fetchCountries()

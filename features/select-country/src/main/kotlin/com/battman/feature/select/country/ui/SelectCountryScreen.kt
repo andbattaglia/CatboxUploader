@@ -129,7 +129,7 @@ internal fun CountryItem(
 
 @Preview(showBackground = true)
 @Composable
-fun WelcomeScreenPreview() {
+fun SelectCountryPreview() {
     val countries = listOf(
         Country(248, "AX", "ALA", "Aland Islands", "+358-18", "^[0-9]{8,15}$"),
         Country(840, "US", "USA", "United States", "+1", "^[0-9]{10}$"),

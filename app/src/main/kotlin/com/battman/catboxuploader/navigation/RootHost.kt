@@ -5,6 +5,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.battman.feature.select.country.ui.navigation.SELECT_COUNTRY_ROUTE
 import com.battman.feature.select.country.ui.navigation.selectCountryScreen
+import com.battman.feature.select.photo.ui.navigation.navigateToSelectPhotos
+import com.battman.feature.select.photo.ui.navigation.selectPhotosScreen
 
 @Composable
 fun RootHost() {
@@ -15,7 +17,9 @@ fun RootHost() {
         startDestination = SELECT_COUNTRY_ROUTE,
     ) {
         selectCountryScreen(
-            onNavigateToGallery = {},
+            onNavigateToGallery = { navController.navigateToSelectPhotos() },
         )
+
+        selectPhotosScreen()
     }
 }

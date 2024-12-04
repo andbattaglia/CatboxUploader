@@ -50,6 +50,7 @@
             <option value="$PROJECT_DIR$/domain/usecases" />
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/select-country" />
+            <option value="$PROJECT_DIR$/features/select-photos" />
             <option value="$PROJECT_DIR$/gradle/plugins" />
             <option value="$PROJECT_DIR$/gradle/plugins/conventions" />
           </set>
