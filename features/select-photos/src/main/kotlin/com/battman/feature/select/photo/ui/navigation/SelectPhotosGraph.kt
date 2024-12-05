@@ -12,10 +12,13 @@ fun NavController.navigateToSelectPhotos() {
     navigate(SELECT_PHOTOS_ROUTE)
 }
 
-fun NavGraphBuilder.selectPhotosScreen() {
+fun NavGraphBuilder.selectPhotosScreen(
+    onNavigateToPermissionSettings: () -> Unit,
+) {
     composable(route = SELECT_PHOTOS_ROUTE) {
         SelectPhotosScreen(
             viewModel = hiltViewModel(),
+            onNavigateToPermissionSettings = onNavigateToPermissionSettings,
         )
     }
 }
