@@ -38,6 +38,7 @@ dependencies {
     implementation(projects.core.ui.compose)
     implementation(projects.core.ui.navigation)
     implementation(projects.data.countries.countriesDi)
+    implementation(projects.data.mediastore.mediastoreDi)
     implementation(projects.features.selectCountry)
     implementation(projects.features.selectPhotos)
 
