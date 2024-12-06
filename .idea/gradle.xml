@@ -44,6 +44,10 @@
             <option value="$PROJECT_DIR$/data/countries/countries-api" />
             <option value="$PROJECT_DIR$/data/countries/countries-di" />
             <option value="$PROJECT_DIR$/data/countries/countries-impl" />
+            <option value="$PROJECT_DIR$/data/mediastore" />
+            <option value="$PROJECT_DIR$/data/mediastore/mediastore-api" />
+            <option value="$PROJECT_DIR$/data/mediastore/mediastore-di" />
+            <option value="$PROJECT_DIR$/data/mediastore/mediastore-impl" />
             <option value="$PROJECT_DIR$/data/network-ext" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/domain/models" />
