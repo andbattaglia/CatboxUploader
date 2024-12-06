@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_network_title">Network Error</string>
+    <string name="error_network_description">It seems there\'s an issue with your internet connection. Please check and try again.</string>
+    <string name="error_service_unavailable_title">Service Unavailable</string>
+    <string name="error_service_unavailable_description">The service is currently unavailable. Please try again later.</string>
+    <string name="error_not_found_title">Not found</string>
+    <string name="error_not_found_description">The requested resource couldn\'t be found. Please check and try again.</string>
+    <string name="error_server_title">Server error</string>
+    <string name="error_server_description">We encountered a problem on our end. Please try again later.</string>
+    <string name="error_unknown_title">Unexpected error</string>
+    <string name="error_unknown_description">An unexpected error occurred. Please try again.</string>
+</resources>
+
