@@ -13,9 +13,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.battman.catboxuploader.domain.models.Country
+import com.battman.core.ui.compose.components.CUMessagePage
 import com.battman.core.ui.compose.components.CUTopAppBar
 import com.battman.core.ui.compose.components.CuCard
 import com.battman.core.ui.compose.theme.CatboxUploaderTheme
@@ -26,6 +28,7 @@ import com.battman.core.ui.compose.theme.outfitFontFamily
 import com.battman.feature.select.country.ui.SelectCountryContract.UiEvent.NavigateToGallery
 import com.battman.feature.select.country.ui.SelectCountryContract.UiIntent.OnCountryClick
 import com.battman.feature.select.country.ui.SelectCountryContract.UiState
+import com.battman.catboxuploader.feature.common.R as Rcommon
 
 @Composable
 internal fun SelectCountryScreen(
@@ -73,19 +76,56 @@ internal fun SelectCountryScreen(
             )
         },
     ) { paddingValues ->
+        when (state) {
+            UiState.Loading -> {
+            }
+            is UiState.Success -> {
+                SelectCountryContent(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    countries = state.countries,
+                    onClick = onClick,
+                )
+            }
+            is UiState.Error -> {
+                CUMessagePage(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    title = stringResource(state.titleRes),
+                    description = stringResource(state.descriptionRes),
+                    painter = painterResource(id = Rcommon.drawable.error_state),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+internal fun SelectCountryContent(
+    countries: List<Country>,
+    modifier: Modifier = Modifier,
+    onClick: (iso: Int) -> Unit = {},
+) {
+    if (countries.isNotEmpty()) {
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+            modifier = modifier,
             contentPadding = PaddingValues(dimensions.spacing_xs),
         ) {
-            items(state.countries.size) { index ->
+            items(countries.size) { index ->
                 CountryItem(
-                    country = state.countries[index],
+                    country = countries[index],
                     onClick = onClick,
                 )
             }
         }
+    } else {
+        CUMessagePage(
+            modifier = modifier,
+            title = stringResource(Rcommon.string.empty_title),
+            painter = painterResource(id = Rcommon.drawable.empty_state),
+        )
     }
 }
 
@@ -129,7 +169,7 @@ internal fun CountryItem(
 
 @Preview(showBackground = true)
 @Composable
-fun SelectCountryPreview() {
+fun SelectCountrySuccessPreview() {
     val countries = listOf(
         Country(248, "AX", "ALA", "Aland Islands", "+358-18", "^[0-9]{8,15}$"),
         Country(840, "US", "USA", "United States", "+1", "^[0-9]{10}$"),
@@ -139,7 +179,32 @@ fun SelectCountryPreview() {
 
     CatboxUploaderTheme {
         SelectCountryScreen(
-            state = UiState(countries),
+            state = UiState.Success(countries),
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SelectCountryErrorPreview() {
+    CatboxUploaderTheme {
+        SelectCountryScreen(
+            state = UiState.Error(
+                titleRes = Rcommon.string.error_network_title,
+                descriptionRes = Rcommon.string.error_network_description,
+            ),
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SelectCountryEmptyPreview() {
+    val countries = emptyList<Country>()
+
+    CatboxUploaderTheme {
+        SelectCountryScreen(
+            state = UiState.Success(countries),
         )
     }
 }

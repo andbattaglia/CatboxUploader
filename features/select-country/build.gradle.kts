@@ -12,4 +12,5 @@ dependencies {
     implementation(projects.core.ui.mvi)
     implementation(projects.core.ui.navigation)
     implementation(projects.domain.usecases)
+    implementation(projects.features.common)
 }

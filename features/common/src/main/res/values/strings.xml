@@ -10,5 +10,7 @@
     <string name="error_server_description">We encountered a problem on our end. Please try again later.</string>
     <string name="error_unknown_title">Unexpected error</string>
     <string name="error_unknown_description">An unexpected error occurred. Please try again.</string>
+
+    <string name="empty_title">No data found</string>
 </resources>
 

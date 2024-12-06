@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.battman.catboxuploader.domain.usecases.GetCountriesUseCase
 import com.battman.catboxuploader.domain.usecases.GetCountriesUseCase.Params
+import com.battman.catboxuploader.feature.common.extensions.toMessageDescription
+import com.battman.catboxuploader.feature.common.extensions.toMessageTitle
 import com.battman.core.ui.mvi.MVIModel
 import com.battman.feature.select.country.ui.SelectCountryContract.UiEvent
 import com.battman.feature.select.country.ui.SelectCountryContract.UiEvent.NavigateToGallery
@@ -19,8 +21,7 @@ internal class SelectCountryModel @Inject constructor(
     private val getCountriesUseCase: GetCountriesUseCase,
 ) : MVIModel<UiState, UiIntent, UiEvent>() {
 
-    override fun createInitialState() =
-        UiState(countries = emptyList())
+    override fun createInitialState() = UiState.Loading
 
     override fun handleIntent(intent: UiIntent) =
         when (intent) {
@@ -35,8 +36,15 @@ internal class SelectCountryModel @Inject constructor(
         viewModelScope.launch {
             getCountriesUseCase.execute(params = Params)
                 .fold(
-                    ifRight = { setState { copy(countries = it) } },
-                    ifLeft = {},
+                    ifRight = { setState { UiState.Success(countries = it) } },
+                    ifLeft = {
+                        setState {
+                            UiState.Error(
+                                titleRes = it.toMessageTitle(),
+                                descriptionRes = it.toMessageDescription(),
+                            )
+                        }
+                    },
                 )
         }
     }
