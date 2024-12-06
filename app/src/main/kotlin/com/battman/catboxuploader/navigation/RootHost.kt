@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.battman.catboxuploader.feature.createalbum.ui.navigation.createAlbumScreen
+import com.battman.catboxuploader.feature.createalbum.ui.navigation.navigateToCreateAlbum
 import com.battman.feature.select.country.ui.navigation.SELECT_COUNTRY_ROUTE
 import com.battman.feature.select.country.ui.navigation.selectCountryScreen
 import com.battman.feature.select.photo.ui.navigation.navigateToSelectPhotos
@@ -28,8 +30,10 @@ fun RootHost() {
 
         selectPhotosScreen(
             onNavigateToPermissionSettings = { context.openActivitySettings() },
-            onNavigateToUpload = { },
+            onNavigateToUpload = { navController.navigateToCreateAlbum() },
         )
+
+        createAlbumScreen { }
     }
 }
 

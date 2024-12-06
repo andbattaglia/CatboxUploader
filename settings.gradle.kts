@@ -53,5 +53,6 @@ include(
     ":domain:usecases",
     ":features:common",
     ":features:select-country",
-    ":features:select-photos"
+    ":features:select-photos",
+    ":features:create-album"
 )

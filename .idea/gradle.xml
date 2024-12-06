@@ -54,6 +54,7 @@
             <option value="$PROJECT_DIR$/domain/usecases" />
             <option value="$PROJECT_DIR$/features" />
             <option value="$PROJECT_DIR$/features/common" />
+            <option value="$PROJECT_DIR$/features/create-album" />
             <option value="$PROJECT_DIR$/features/select-country" />
             <option value="$PROJECT_DIR$/features/select-photos" />
             <option value="$PROJECT_DIR$/gradle/plugins" />
