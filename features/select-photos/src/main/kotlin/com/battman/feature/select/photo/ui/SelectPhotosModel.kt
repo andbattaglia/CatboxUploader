@@ -27,12 +27,10 @@ internal class SelectPhotosModel @Inject constructor(
 ) : MVIModel<UiState, UiIntent, UiEvent>() {
 
     private val selectedIds = mutableListOf<Long>()
+    private val currentPhotos
+        get() = (currentState as? UiState.Success)?.photos ?: emptyList()
 
-    override fun createInitialState() =
-        UiState(
-            photos = emptyList(),
-            nextButtonEnabled = false,
-        )
+    override fun createInitialState() = UiState.Loading
 
     override fun handleIntent(intent: UiIntent) =
         when (intent) {
@@ -65,19 +63,24 @@ internal class SelectPhotosModel @Inject constructor(
         } else {
             selectedIds.add(selectedPhotoId)
         }
-        updateSelectedPhotos(currentState.photos)
+        updateSelectedPhotos(currentPhotos)
     }
 
     private fun updateSelectedPhotos(photos: List<UIPhoto>) {
         val result = photos.map {
             it.copy(selected = it.id in selectedIds)
         }
-        setState { copy(photos = result, nextButtonEnabled = result.any { it.selected }) }
+        setState {
+            UiState.Success(
+                photos = result,
+                nextButtonEnabled = result.any { it.selected },
+            )
+        }
     }
 
     private fun sendSelectedPhotos() {
         viewModelScope.launch {
-            val selectedPhotos = currentState.photos.filter { it.selected }.toPhotos()
+            val selectedPhotos = currentPhotos.filter { it.selected }.toPhotos()
             sendSelectedPhotosToUploadUseCase.execute(Params(selectedPhotos))
                 .fold(
                     ifRight = { sendEvent { NavigateToUpload } },

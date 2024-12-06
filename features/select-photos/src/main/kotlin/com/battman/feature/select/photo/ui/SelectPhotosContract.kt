@@ -13,10 +13,14 @@ internal sealed interface SelectPhotosContract {
         data object OnNext : UiIntent()
     }
 
-    data class UiState(
-        val photos: List<UIPhoto>,
-        val nextButtonEnabled: Boolean,
-    ) : MVIState
+    sealed class UiState : MVIState {
+        data object Loading : UiState()
+        data class Success(
+            val photos: List<UIPhoto>,
+            val nextButtonEnabled: Boolean,
+        ) : UiState()
+        data class Error(val titleRes: Int, val descriptionRes: Int) : UiState()
+    }
 
     sealed class UiEvent : MVIEvent {
         data object NavigateToUpload : UiEvent()
