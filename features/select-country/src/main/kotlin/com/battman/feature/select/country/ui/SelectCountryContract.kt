@@ -11,9 +11,13 @@ internal sealed interface SelectCountryContract {
         data class OnCountryClick(val iso: Int) : UiIntent()
     }
 
-    data class UiState(
-        val countries: List<Country>,
-    ) : MVIState
+    sealed class UiState : MVIState {
+        data object Loading : UiState()
+        data class Success(
+            val countries: List<Country>,
+        ) : UiState()
+        data class Error(val titleRes: Int, val descriptionRes: Int) : UiState()
+    }
 
     sealed class UiEvent : MVIEvent {
         data object NavigateToGallery : UiEvent()
