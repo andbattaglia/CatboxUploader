@@ -4,4 +4,5 @@
     <string name="select_photos_permission_title">Access Your Photos</string>
     <string name="select_photos_permission_description">We need your permission to access your photos to display and manage images stored on your device. This allows us to provide a seamless gallery experience for you.</string>
     <string name="select_photos_permission_button">Request permission</string>
+    <string name="select_photos_next_button">Next</string>
 </resources>

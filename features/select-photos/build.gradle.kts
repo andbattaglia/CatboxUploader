@@ -13,4 +13,5 @@ dependencies {
     implementation(projects.core.ui.navigation)
     implementation(projects.domain.usecases)
     implementation(libs.google.accompanist.permission)
+    implementation(libs.coil.compose)
 }
