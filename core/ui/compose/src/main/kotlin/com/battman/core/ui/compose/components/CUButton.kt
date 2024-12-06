@@ -26,10 +26,10 @@ fun CUButton(
         modifier = modifier
             .height(dimensions.button_size_L),
         colors = ButtonDefaults.buttonColors(
-            contentColor = colors.onPrimary,
-            containerColor = colors.primary,
-//            disabledContainerColor = colors.buttonPrimaryDisabledContainer,
-//            disabledContentColor = colors.buttonPrimaryDisabledContent,
+            contentColor = colors.buttonPrimaryContent,
+            containerColor = colors.buttonPrimaryContainer,
+            disabledContainerColor = colors.buttonPrimaryDisabledContainer,
+            disabledContentColor = colors.buttonPrimaryDisabledContent,
         ),
         enabled = enabled,
         shape = RoundedCornerShape(dimensions.roundCorner_M),
