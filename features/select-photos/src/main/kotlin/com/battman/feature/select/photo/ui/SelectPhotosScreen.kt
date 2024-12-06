@@ -26,13 +26,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.battman.core.ui.compose.components.CUButton
+import com.battman.core.ui.compose.components.CUMessagePage
 import com.battman.core.ui.compose.components.CUTopAppBar
+import com.battman.core.ui.compose.components.CircularIndicatorOverlay
 import com.battman.core.ui.compose.components.CuCard
 import com.battman.core.ui.compose.theme.CatboxUploaderTheme
 import com.battman.core.ui.compose.theme.CatboxUploaderTheme.colors
@@ -50,6 +53,7 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import java.util.Date
+import com.battman.catboxuploader.feature.common.R as Rcommon
 
 @Composable
 internal fun SelectPhotosScreen(
@@ -109,13 +113,33 @@ internal fun SelectPhotosScreen(
             onPermissionGranted = onPermissionGranted,
             onNavigateToPermissionSettings = onNavigateToPermissionSettings,
             content = {
-                SelectPhotosContent(
-                    modifier = Modifier.fillMaxSize(),
-                    photos = state.photos,
-                    nextButtonEnabled = state.nextButtonEnabled,
-                    onItemSelected = onItemSelected,
-                    onNextClick = onNextClick,
-                )
+                when (state) {
+                    is UiState.Loading -> {
+                        CircularIndicatorOverlay(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                        )
+                    }
+                    is UiState.Error -> {
+                        CUMessagePage(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(paddingValues),
+                            title = stringResource(state.titleRes),
+                            description = stringResource(state.descriptionRes),
+                            painter = painterResource(id = Rcommon.drawable.error_state),
+                        )
+                    }
+                    is UiState.Success -> {
+                        SelectPhotosContent(
+                            modifier = Modifier.fillMaxSize(),
+                            photos = state.photos,
+                            nextButtonEnabled = state.nextButtonEnabled,
+                            onItemSelected = onItemSelected,
+                            onNextClick = onNextClick,
+                        )
+                    }
+                }
             },
         )
     }
@@ -130,18 +154,26 @@ internal fun SelectPhotosContent(
     onNextClick: () -> Unit = {},
 ) {
     Box(modifier = modifier) {
-        ImageGridScreen(
-            modifier = Modifier
-                .fillMaxSize(),
-            contentPadding = PaddingValues(
-                top = dimensions.spacing_s,
-                start = dimensions.spacing_s,
-                end = dimensions.spacing_s,
-                bottom = dimensions.spacing_xl + dimensions.button_size_L,
-            ),
-            photos = photos,
-            onItemSelected = onItemSelected,
-        )
+        if (photos.isNotEmpty()) {
+            ImageGridScreen(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentPadding = PaddingValues(
+                    top = dimensions.spacing_s,
+                    start = dimensions.spacing_s,
+                    end = dimensions.spacing_s,
+                    bottom = dimensions.spacing_xl + dimensions.button_size_L,
+                ),
+                photos = photos,
+                onItemSelected = onItemSelected,
+            )
+        } else {
+            CUMessagePage(
+                modifier = modifier,
+                title = stringResource(Rcommon.string.empty_title),
+                painter = painterResource(id = Rcommon.drawable.empty_state),
+            )
+        }
         CUButton(
             modifier = Modifier
                 .fillMaxWidth()
@@ -301,7 +333,7 @@ fun ImageCard(
 fun SelectPhotosScreenPreview() {
     CatboxUploaderTheme {
         SelectPhotosScreen(
-            state = UiState(
+            state = UiState.Success(
                 photos = emptyList(),
                 nextButtonEnabled = false,
             ),
@@ -322,6 +354,19 @@ fun SelectPhotosContentPreview() {
                 selected = true,
             )
         }
+
+        SelectPhotosContent(
+            photos = photos,
+            nextButtonEnabled = false,
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SelectPhotosContentEmptyPreview() {
+    CatboxUploaderTheme {
+        val photos = emptyList<UIPhoto>()
 
         SelectPhotosContent(
             photos = photos,
