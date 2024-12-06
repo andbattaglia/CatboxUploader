@@ -12,6 +12,15 @@ interface ColorScheme {
     val surface: Color @Composable get
     val onSurface: Color @Composable get
     val surfaceContainer: Color @Composable get
+    val grayscale10: Color @Composable get
+    val grayscale20: Color @Composable get
+    val grayscale30: Color @Composable get
+    val grayscale40: Color @Composable get
+    val grayscale50: Color @Composable get
+    val grayscale60: Color @Composable get
+    val grayscale70: Color @Composable get
+    val grayscale80: Color @Composable get
+    val overlay: Color @Composable get
 }
 
 object ColorSchemes {
@@ -23,6 +32,15 @@ object ColorSchemes {
         override val surface: Color @Composable get() = Color(0xFFF9F9FF)
         override val onSurface: Color @Composable get() = Color(0xFF191C20)
         override val surfaceContainer: Color @Composable get() = Color(0xFFEDEDF4)
+        override val grayscale10: Color @Composable get() = Color(0xFFCCCCCC)
+        override val grayscale20: Color @Composable get() = Color(0xFFB3B3B3)
+        override val grayscale30: Color @Composable get() = Color(0xFF999999)
+        override val grayscale40: Color @Composable get() = Color(0xFF808080)
+        override val grayscale50: Color @Composable get() = Color(0xFF666666)
+        override val grayscale60: Color @Composable get() = Color(0xFF4D4D4D)
+        override val grayscale70: Color @Composable get() = Color(0xFF333333)
+        override val grayscale80: Color @Composable get() = Color(0xFF1A1A1A)
+        override val overlay: Color @Composable get() = Color(0xFFE2E2E9)
     }
 
     object Dark : ColorScheme {
@@ -33,6 +51,15 @@ object ColorSchemes {
         override val surface: Color @Composable get() = Color(0xFF111318)
         override val onSurface: Color @Composable get() = Color(0xFFE2E2E9)
         override val surfaceContainer: Color @Composable get() = Color(0xFF1D2024)
+        override val grayscale10: Color @Composable get() = Color(0xFFCCCCCC)
+        override val grayscale20: Color @Composable get() = Color(0xFFB3B3B3)
+        override val grayscale30: Color @Composable get() = Color(0xFF999999)
+        override val grayscale40: Color @Composable get() = Color(0xFF808080)
+        override val grayscale50: Color @Composable get() = Color(0xFF666666)
+        override val grayscale60: Color @Composable get() = Color(0xFF4D4D4D)
+        override val grayscale70: Color @Composable get() = Color(0xFF333333)
+        override val grayscale80: Color @Composable get() = Color(0xFF1A1A1A)
+        override val overlay: Color @Composable get() = Color(0xFFE2E2E9)
     }
 }
 
@@ -44,6 +71,11 @@ data class Colors(
     val surface: Color,
     val onSurface: Color,
     val surfaceContainer: Color,
+    val buttonPrimaryContainer: Color,
+    val buttonPrimaryContent: Color,
+    val buttonPrimaryDisabledContainer: Color,
+    val buttonPrimaryDisabledContent: Color,
+    val overlay: Color,
 )
 
 @Composable
@@ -56,6 +88,11 @@ fun buildThemeColors(colorScheme: ColorScheme) =
         surface = colorScheme.surface,
         onSurface = colorScheme.onSurface,
         surfaceContainer = colorScheme.surfaceContainer,
+        buttonPrimaryContainer = colorScheme.primary,
+        buttonPrimaryContent = colorScheme.onPrimary,
+        buttonPrimaryDisabledContainer = colorScheme.grayscale40,
+        buttonPrimaryDisabledContent = colorScheme.onPrimary,
+        overlay = colorScheme.overlay,
     )
 
 internal val LocalColors = staticCompositionLocalOf<Colors> {
