@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.battman.catboxuploader.domain.models.Country
 import com.battman.core.ui.compose.components.CUMessagePage
 import com.battman.core.ui.compose.components.CUTopAppBar
+import com.battman.core.ui.compose.components.CircularIndicatorOverlay
 import com.battman.core.ui.compose.components.CuCard
 import com.battman.core.ui.compose.theme.CatboxUploaderTheme
 import com.battman.core.ui.compose.theme.CatboxUploaderTheme.colors
@@ -78,6 +79,10 @@ internal fun SelectCountryScreen(
     ) { paddingValues ->
         when (state) {
             UiState.Loading -> {
+                CircularIndicatorOverlay(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                )
             }
             is UiState.Success -> {
                 SelectCountryContent(
@@ -205,6 +210,16 @@ fun SelectCountryEmptyPreview() {
     CatboxUploaderTheme {
         SelectCountryScreen(
             state = UiState.Success(countries),
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SelectCountryLoadingPreview() {
+    CatboxUploaderTheme {
+        SelectCountryScreen(
+            state = UiState.Loading,
         )
     }
 }

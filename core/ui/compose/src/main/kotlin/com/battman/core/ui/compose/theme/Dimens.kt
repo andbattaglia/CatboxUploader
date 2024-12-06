@@ -29,6 +29,7 @@ class Dimensions(
     val elevation: Dp,
     val elevationNone: Dp = 0.dp,
     val minimumToolbarHeight: Dp = 52.dp,
+    val indeterminateCircularProgress: Dp = 52.dp,
 )
 
 internal val defaultDimensions = Dimensions(
