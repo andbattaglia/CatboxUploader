@@ -45,14 +45,14 @@ include(
     ":data:countries:countries-api",
     ":data:countries:countries-di",
     ":data:countries:countries-impl",
-    ":data:mediastore:mediastore-api",
-    ":data:mediastore:mediastore-di",
-    ":data:mediastore:mediastore-impl",
+    ":data:photos:photos-api",
+    ":data:photos:photos-di",
+    ":data:photos:photos-impl",
     ":data:network-ext",
     ":domain:models",
     ":domain:usecases",
     ":features:common",
+    ":features:manage-photos",
     ":features:select-country",
     ":features:select-photos",
-    ":features:create-album"
 )

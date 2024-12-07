@@ -8,6 +8,6 @@ dependencies {
     api(libs.arrow.core)
 
     implementation(projects.data.countries.countriesApi)
-    implementation(projects.data.mediastore.mediastoreApi)
+    implementation(projects.data.photos.photosApi)
     implementation(libs.javax.inject)
 }
