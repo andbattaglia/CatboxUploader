@@ -9,6 +9,8 @@ internal sealed interface ManagePhotosContract {
 
     sealed class UiIntent : MVIIntent {
         data object OnUploadClick : UiIntent()
+        data class OnEditClick(val photoId: Long) : UiIntent()
+        data class OnDeleteClick(val photoId: Long) : UiIntent()
     }
 
     sealed class UiState : MVIState {

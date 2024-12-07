@@ -7,6 +7,8 @@ import androidx.compose.ui.graphics.Color
 interface ColorScheme {
     val primary: Color @Composable get
     val onPrimary: Color @Composable get
+    val tertiary: Color @Composable get
+    val onTertiary: Color @Composable get
     val background: Color @Composable get
     val onBackground: Color @Composable get
     val surface: Color @Composable get
@@ -27,6 +29,8 @@ object ColorSchemes {
     object Light : ColorScheme {
         override val primary: Color @Composable get() = Color(0xFF415F91)
         override val onPrimary: Color @Composable get() = Color(0xFFFFFFFF)
+        override val tertiary: Color @Composable get() = Color(0xFFfad8fd)
+        override val onTertiary: Color @Composable get() = Color(0xFF28132e)
         override val background: Color @Composable get() = Color(0xFFFFFFFF)
         override val onBackground: Color @Composable get() = Color(0xFF191C20)
         override val surface: Color @Composable get() = Color(0xFFF9F9FF)
@@ -46,6 +50,8 @@ object ColorSchemes {
     object Dark : ColorScheme {
         override val primary: Color @Composable get() = Color(0xFFaac7ff)
         override val onPrimary: Color @Composable get() = Color(0xFF0a305f)
+        override val tertiary: Color @Composable get() = Color(0xFF573e5c)
+        override val onTertiary: Color @Composable get() = Color(0xFFfad8fd)
         override val background: Color @Composable get() = Color(0xFF111318)
         override val onBackground: Color @Composable get() = Color(0xFFE2E2E9)
         override val surface: Color @Composable get() = Color(0xFF111318)
@@ -66,6 +72,8 @@ object ColorSchemes {
 data class Colors(
     val primary: Color,
     val onPrimary: Color,
+    val tertiary: Color,
+    val onTertiary: Color,
     val background: Color,
     val onBackground: Color,
     val surface: Color,
@@ -83,6 +91,8 @@ fun buildThemeColors(colorScheme: ColorScheme) =
     Colors(
         primary = colorScheme.primary,
         onPrimary = colorScheme.onPrimary,
+        tertiary = colorScheme.tertiary,
+        onTertiary = colorScheme.onTertiary,
         background = colorScheme.background,
         onBackground = colorScheme.onBackground,
         surface = colorScheme.surface,
