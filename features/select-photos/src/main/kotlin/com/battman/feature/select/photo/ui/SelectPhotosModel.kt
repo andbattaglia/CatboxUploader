@@ -2,9 +2,9 @@ package com.battman.feature.select.photo.ui
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.battman.catboxuploader.domain.usecases.GetAllPhotosUseCase
-import com.battman.catboxuploader.domain.usecases.SendSelectedPhotosToUploadUseCase
-import com.battman.catboxuploader.domain.usecases.SendSelectedPhotosToUploadUseCase.Params
+import com.battman.catboxuploader.domain.usecases.GetDevicePhotosUseCase
+import com.battman.catboxuploader.domain.usecases.SaveSelectedPhotosUseCase
+import com.battman.catboxuploader.domain.usecases.SaveSelectedPhotosUseCase.Params
 import com.battman.core.ui.mvi.MVIModel
 import com.battman.feature.select.photo.ui.SelectPhotosContract.UiEvent
 import com.battman.feature.select.photo.ui.SelectPhotosContract.UiEvent.NavigateToUpload
@@ -22,8 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class SelectPhotosModel @Inject constructor(
-    private val getAllPhotosUseCase: GetAllPhotosUseCase,
-    private val sendSelectedPhotosToUploadUseCase: SendSelectedPhotosToUploadUseCase,
+    private val getDevicePhotosUseCase: GetDevicePhotosUseCase,
+    private val saveSelectedPhotosUseCase: SaveSelectedPhotosUseCase,
 ) : MVIModel<UiState, UiIntent, UiEvent>() {
 
     private val selectedIds = mutableListOf<Long>()
@@ -47,7 +47,7 @@ internal class SelectPhotosModel @Inject constructor(
 
     private fun fetchPhotos() {
         viewModelScope.launch {
-            getAllPhotosUseCase.execute(params = GetAllPhotosUseCase.Params)
+            getDevicePhotosUseCase.execute(params = GetDevicePhotosUseCase.Params)
                 .fold(
                     ifRight = { photos ->
                         updateSelectedPhotos(photos.toUIPhotos())
@@ -81,7 +81,7 @@ internal class SelectPhotosModel @Inject constructor(
     private fun sendSelectedPhotos() {
         viewModelScope.launch {
             val selectedPhotos = currentPhotos.filter { it.selected }.toPhotos()
-            sendSelectedPhotosToUploadUseCase.execute(Params(selectedPhotos))
+            saveSelectedPhotosUseCase.execute(Params(selectedPhotos))
                 .fold(
                     ifRight = { sendEvent { NavigateToUpload } },
                     ifLeft = { Log.e(TAG, "Failed to send selected photos") },
