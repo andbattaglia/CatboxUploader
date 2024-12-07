@@ -13,6 +13,7 @@ dependencies {
     implementation(projects.core.ui.navigation)
     implementation(projects.domain.usecases)
     implementation(projects.features.common)
-    implementation(libs.google.accompanist.permission)
+    implementation(libs.android.image.cropper)
     implementation(libs.coil.compose)
+    implementation(libs.google.accompanist.permission)
 }
