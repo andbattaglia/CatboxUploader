@@ -1,5 +1,7 @@
 package com.battman.catboxuploader.feature.managephotos.ui
 
+import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,8 +37,10 @@ import coil3.compose.AsyncImage
 import com.battman.catboxuploader.domain.models.Photo
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnDeleteClick
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnEditClick
+import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnEditSaveClick
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnUploadClick
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiState
+import com.battman.catboxuploader.feature.managephotos.ui.components.ImageCropper
 import com.battman.core.ui.compose.components.CUButton
 import com.battman.core.ui.compose.components.CUMessagePage
 import com.battman.core.ui.compose.components.CUTopAppBar
@@ -64,7 +68,9 @@ internal fun ManagePhotosScreen(
         state = state,
         onUploadClick = { processIntent(OnUploadClick) },
         onEditClick = { photoId -> processIntent(OnEditClick(photoId)) },
+        onEditSaveClick = { photoId, uri -> processIntent(OnEditSaveClick(photoId, uri.toString())) },
         onDeleteClick = { photoId -> processIntent(OnDeleteClick(photoId)) },
+        onRefresh = { processIntent(ManagePhotosContract.UiIntent.OnRefresh) },
     )
 }
 
@@ -74,7 +80,9 @@ internal fun ManagePhotosScreen(
     modifier: Modifier = Modifier,
     onUploadClick: () -> Unit = {},
     onEditClick: (Long) -> Unit = {},
+    onEditSaveClick: (Long, Uri) -> Unit = { _, _ -> },
     onDeleteClick: (Long) -> Unit = {},
+    onRefresh: () -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier,
@@ -119,6 +127,17 @@ internal fun ManagePhotosScreen(
                     onUploadClick = onUploadClick,
                     onEditClick = onEditClick,
                     onDeleteClick = onDeleteClick,
+                )
+            }
+            is UiState.EditMode -> {
+                EditModeContent(
+                    photoUri = Uri.parse(state.photo.contentUri),
+                    onCropped = { uri ->
+                        onEditSaveClick(state.photo.id, uri)
+                    },
+                    onCancelled = {
+                        onRefresh()
+                    },
                 )
             }
         }
@@ -287,6 +306,24 @@ fun RoundIconButton(
             tint = iconTint,
         )
     }
+}
+
+@Composable
+fun EditModeContent(
+    photoUri: Uri,
+    onCropped: (Uri) -> Unit,
+    onCancelled: () -> Unit,
+) {
+    ImageCropper(
+        uri = photoUri,
+        onCropSuccess = { uri ->
+            onCropped(uri)
+        },
+        onCropFailure = { error ->
+            Log.e("EditModeContent", "Cropping failed", error)
+            onCancelled()
+        },
+    )
 }
 
 @Preview(showBackground = true)
