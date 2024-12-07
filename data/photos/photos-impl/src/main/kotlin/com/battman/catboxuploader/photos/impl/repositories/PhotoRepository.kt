@@ -32,6 +32,11 @@ class PhotoRepository @Inject constructor(
     override suspend fun getCachedPhotos(): Either<ErrorType, List<Photo>> =
         cache.values.toList().right()
 
+    override suspend fun deleteCachedPhoto(photoId: Long): Either<ErrorType, List<Photo>> {
+        cache.remove(photoId)
+        return cache.values.toList().right()
+    }
+
 //    override suspend fun upload(): Either<ErrorType, String> =
 //        withContext(ioDispatcher){
 //            currentAlbum?.let { album ->

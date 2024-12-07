@@ -38,6 +38,17 @@ interface IPhotoRepository {
     suspend fun getCachedPhotos(): Either<ErrorType, List<Photo>>
 
     /**
+     * Deletes a cached photo by its unique identifier.
+     *
+     * @param photoId The unique identifier of the photo to be deleted from the cache.
+     * @return An `Either` type containing:
+     *         - `ErrorType`: An error descriptor if the operation fails.
+     *         - `List<Photo>`: The updated list of cached photos if the operation succeeds.
+     */
+    suspend fun deleteCachedPhoto(photoId: Long): Either<ErrorType, List<Photo>>
+
+
+    /**
      * Uploads the album and returns the result.
      *
      * @return An `Either` type containing:
