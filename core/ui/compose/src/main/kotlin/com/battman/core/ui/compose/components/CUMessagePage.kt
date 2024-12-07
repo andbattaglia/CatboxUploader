@@ -38,7 +38,7 @@ fun CUMessagePage(
     ) {
         Image(
             painter = painter,
-            contentDescription = "Sample Image",
+            contentDescription = null,
             modifier = Modifier
                 .size(dimensions.icon_xxl),
         )

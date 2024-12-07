@@ -1,28 +1,40 @@
 package com.battman.catboxuploader.feature.managephotos.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.battman.catboxuploader.domain.models.Photo
+import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnDeleteClick
+import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnEditClick
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnUploadClick
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiState
 import com.battman.core.ui.compose.components.CUButton
@@ -51,6 +63,8 @@ internal fun ManagePhotosScreen(
     ManagePhotosScreen(
         state = state,
         onUploadClick = { processIntent(OnUploadClick) },
+        onEditClick = { photoId -> processIntent(OnEditClick(photoId)) },
+        onDeleteClick = { photoId -> processIntent(OnDeleteClick(photoId)) },
     )
 }
 
@@ -59,6 +73,8 @@ internal fun ManagePhotosScreen(
     state: UiState,
     modifier: Modifier = Modifier,
     onUploadClick: () -> Unit = {},
+    onEditClick: (Long) -> Unit = {},
+    onDeleteClick: (Long) -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier,
@@ -101,6 +117,8 @@ internal fun ManagePhotosScreen(
                     photos = state.photos,
                     onItemSelected = {},
                     onUploadClick = onUploadClick,
+                    onEditClick = onEditClick,
+                    onDeleteClick = onDeleteClick,
                 )
             }
         }
@@ -113,6 +131,8 @@ internal fun ManagePhotosContent(
     modifier: Modifier = Modifier,
     onItemSelected: (Long) -> Unit = {},
     onUploadClick: () -> Unit = {},
+    onEditClick: (Long) -> Unit = {},
+    onDeleteClick: (Long) -> Unit = {},
 ) {
     Box(modifier = modifier) {
         if (photos.isNotEmpty()) {
@@ -127,6 +147,8 @@ internal fun ManagePhotosContent(
                 ),
                 photos = photos,
                 onItemSelected = onItemSelected,
+                onEditClick = onEditClick,
+                onDeleteClick = onDeleteClick,
             )
         } else {
             CUMessagePage(
@@ -152,6 +174,8 @@ fun ImageGridScreen(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
     onItemSelected: (Long) -> Unit = {},
+    onEditClick: (Long) -> Unit = {},
+    onDeleteClick: (Long) -> Unit = {},
 ) {
     LazyColumn(
         modifier = modifier,
@@ -165,6 +189,8 @@ fun ImageGridScreen(
                     .fillMaxSize(),
                 photo = photo,
                 onItemSelected = onItemSelected,
+                onEditClick = onEditClick,
+                onDeleteClick = onDeleteClick,
             )
         }
     }
@@ -175,6 +201,8 @@ fun ImageCard(
     photo: Photo,
     modifier: Modifier = Modifier,
     onItemSelected: (Long) -> Unit = {},
+    onEditClick: (Long) -> Unit = {},
+    onDeleteClick: (Long) -> Unit = {},
 ) {
     Column(
         modifier = modifier,
@@ -183,7 +211,7 @@ fun ImageCard(
         Text(
             modifier = Modifier.padding(dimensions.spacing_xs),
             text = photo.name,
-            style = typography.bodyMedium,
+            style = typography.labelLarge,
             color = colors.onBackground,
         )
         CuCard(
@@ -193,14 +221,71 @@ fun ImageCard(
             shape = RoundedCornerShape(dimensions.roundCorner_S),
             onClick = { onItemSelected(photo.id) },
         ) {
-            AsyncImage(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                model = photo.contentUri,
-                contentDescription = photo.name,
-                contentScale = ContentScale.Crop,
-            )
+                    .fillMaxSize()
+                    .background(colors.surfaceContainer),
+            ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(dimensions.spacing_xl),
+                    model = photo.contentUri,
+                    contentDescription = photo.name,
+                    contentScale = ContentScale.Crop,
+                )
+
+                Row(
+                    modifier = Modifier
+                        .padding(
+                            start = dimensions.spacing_xl,
+                            end = dimensions.spacing_xxl,
+                            bottom = dimensions.spacing_2xs,
+                        )
+                        .align(Alignment.BottomEnd),
+                    horizontalArrangement = Arrangement.spacedBy(dimensions.spacing_s),
+                ) {
+                    RoundIconButton(
+                        painter = painterResource(id = Rcommon.drawable.ic_edit_24),
+                        iconTint = colors.onTertiary,
+                        backgroundColor = colors.tertiary,
+                        onClick = { onEditClick(photo.id) },
+                    )
+                    RoundIconButton(
+                        painter = painterResource(id = Rcommon.drawable.ic_delete_24),
+                        iconTint = colors.onTertiary,
+                        backgroundColor = colors.tertiary,
+                        onClick = { onDeleteClick(photo.id) },
+                    )
+                }
+            }
         }
+    }
+}
+
+@Composable
+fun RoundIconButton(
+    onClick: () -> Unit,
+    painter: Painter,
+    modifier: Modifier = Modifier,
+    contentDescription: String? = null,
+    backgroundColor: Color = colors.primary,
+    iconTint: Color = Color.White,
+    size: Dp = dimensions.floating_button_m,
+) {
+    Box(
+        modifier = modifier
+            .size(size)
+            .clip(CircleShape)
+            .background(backgroundColor)
+            .clickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            painter = painter,
+            contentDescription = contentDescription,
+            tint = iconTint,
+        )
     }
 }
 
