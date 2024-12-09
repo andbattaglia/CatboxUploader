@@ -8,4 +8,5 @@ dependencies {
     implementation(libs.arrow.core)
     implementation(libs.arrow.core.retrofit)
     implementation(libs.okhttp)
+    implementation(libs.kotlinx.coroutines.core.jvm)
 }
