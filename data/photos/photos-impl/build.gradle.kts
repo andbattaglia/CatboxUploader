@@ -21,9 +21,12 @@ android {
 dependencies {
     api(projects.data.photos.photosApi)
 
+    implementation(projects.core.contentResolver.contentResolverApi)
     implementation(projects.core.dispatcher.dispatcherApi)
     implementation(projects.core.network.networkApi)
     implementation(projects.data.networkExt)
+
+    implementation(libs.dagger.hilt.android)
 
     implementation(libs.javax.inject)
 }

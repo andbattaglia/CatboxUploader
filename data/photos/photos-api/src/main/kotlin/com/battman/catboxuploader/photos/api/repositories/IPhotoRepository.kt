@@ -3,6 +3,8 @@ package com.battman.catboxuploader.photos.api.repositories
 import arrow.core.Either
 import com.battman.catboxuploader.domain.models.ErrorType
 import com.battman.catboxuploader.domain.models.Photo
+import com.battman.catboxuploader.domain.models.UploadDigest
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Interface representing a repository for accessing media store operations.
@@ -60,11 +62,11 @@ interface IPhotoRepository {
 
 
     /**
-     * Uploads the album and returns the result.
+     * Uploads the album and provides a stream of updates on the upload progress.
      *
-     * @return An `Either` type containing:
-     *         - `ErrorType`: An error descriptor if the operation fails.
-     *         - `String`: A success message or identifier if the operation succeeds.
+     * @return A `Flow` emitting `UploadDigest` objects that represent the progress or status of the upload operation.
+     *         - The flow emits intermediate updates during the upload process.
+     *         - The final emission indicates the completion of the upload.
      */
-//    suspend fun upload(): Either<ErrorType, String>
+    fun upload(): Flow<UploadDigest>
 }
