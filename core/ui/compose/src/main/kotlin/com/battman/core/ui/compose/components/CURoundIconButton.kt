@@ -18,9 +18,9 @@ import com.battman.core.ui.compose.theme.CatboxUploaderTheme.dimensions
 
 @Composable
 fun CURoundIconButton(
-    onClick: () -> Unit,
     painter: Painter,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
     contentDescription: String? = null,
     backgroundColor: Color = colors.primary,
     iconTint: Color = Color.White,

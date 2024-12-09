@@ -14,6 +14,8 @@ interface ColorScheme {
     val surface: Color @Composable get
     val onSurface: Color @Composable get
     val surfaceContainer: Color @Composable get
+    val error: Color @Composable get
+    val onError: Color @Composable get
     val grayscale10: Color @Composable get
     val grayscale20: Color @Composable get
     val grayscale30: Color @Composable get
@@ -36,6 +38,8 @@ object ColorSchemes {
         override val surface: Color @Composable get() = Color(0xFFF9F9FF)
         override val onSurface: Color @Composable get() = Color(0xFF191C20)
         override val surfaceContainer: Color @Composable get() = Color(0xFFEDEDF4)
+        override val error: Color @Composable get() = Color(0xFFba1a1a)
+        override val onError: Color @Composable get() = Color(0xFFffffff)
         override val grayscale10: Color @Composable get() = Color(0xFFCCCCCC)
         override val grayscale20: Color @Composable get() = Color(0xFFB3B3B3)
         override val grayscale30: Color @Composable get() = Color(0xFF999999)
@@ -57,6 +61,8 @@ object ColorSchemes {
         override val surface: Color @Composable get() = Color(0xFF111318)
         override val onSurface: Color @Composable get() = Color(0xFFE2E2E9)
         override val surfaceContainer: Color @Composable get() = Color(0xFF1D2024)
+        override val error: Color @Composable get() = Color(0xFFffb4ab)
+        override val onError: Color @Composable get() = Color(0xFF690005)
         override val grayscale10: Color @Composable get() = Color(0xFFCCCCCC)
         override val grayscale20: Color @Composable get() = Color(0xFFB3B3B3)
         override val grayscale30: Color @Composable get() = Color(0xFF999999)
@@ -83,6 +89,8 @@ data class Colors(
     val buttonPrimaryContent: Color,
     val buttonPrimaryDisabledContainer: Color,
     val buttonPrimaryDisabledContent: Color,
+    val buttonNegativeContainer: Color,
+    val buttonNegativeContent: Color,
     val overlay: Color,
 )
 
@@ -102,6 +110,8 @@ fun buildThemeColors(colorScheme: ColorScheme) =
         buttonPrimaryContent = colorScheme.onPrimary,
         buttonPrimaryDisabledContainer = colorScheme.grayscale40,
         buttonPrimaryDisabledContent = colorScheme.onPrimary,
+        buttonNegativeContainer = colorScheme.error,
+        buttonNegativeContent = colorScheme.onError,
         overlay = colorScheme.overlay,
     )
 
