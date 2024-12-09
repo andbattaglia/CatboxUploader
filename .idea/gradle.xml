@@ -24,6 +24,10 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/core/content-resolver" />
+            <option value="$PROJECT_DIR$/core/content-resolver/content-resolver-api" />
+            <option value="$PROJECT_DIR$/core/content-resolver/content-resolver-di" />
+            <option value="$PROJECT_DIR$/core/content-resolver/content-resolver-impl" />
             <option value="$PROJECT_DIR$/core/dispatcher" />
             <option value="$PROJECT_DIR$/core/dispatcher/dispatcher-api" />
             <option value="$PROJECT_DIR$/core/dispatcher/dispatcher-di" />

@@ -33,6 +33,7 @@ dependencies {
     implementation(libs.androidx.core)
     implementation(libs.androidx.core.splashscreen)
 
+    implementation(projects.core.contentResolver.contentResolverDi)
     implementation(projects.core.dispatcher.dispatcherDi)
     implementation(projects.core.network.networkDi)
     implementation(projects.core.ui.compose)

@@ -33,6 +33,9 @@ rootProject.name = "CatboxUploader"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(
     ":app",
+    ":core:content-resolver:content-resolver-api",
+    ":core:content-resolver:content-resolver-di",
+    ":core:content-resolver:content-resolver-impl",
     ":core:dispatcher:dispatcher-api",
     ":core:dispatcher:dispatcher-di",
     ":core:network:network-api",
