@@ -3,7 +3,6 @@ package com.battman.catboxuploader.feature.managephotos.ui
 import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,25 +12,18 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.battman.catboxuploader.domain.models.Photo
@@ -40,12 +32,13 @@ import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.U
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnEditSaveClick
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnUploadClick
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiState
-import com.battman.catboxuploader.feature.managephotos.ui.components.ImageCropper
 import com.battman.core.ui.compose.components.CUButton
 import com.battman.core.ui.compose.components.CUMessagePage
+import com.battman.core.ui.compose.components.CURoundIconButton
 import com.battman.core.ui.compose.components.CUTopAppBar
 import com.battman.core.ui.compose.components.CircularIndicatorOverlay
 import com.battman.core.ui.compose.components.CuCard
+import com.battman.core.ui.compose.components.ImageCropper
 import com.battman.core.ui.compose.theme.CatboxUploaderTheme
 import com.battman.core.ui.compose.theme.CatboxUploaderTheme.colors
 import com.battman.core.ui.compose.theme.CatboxUploaderTheme.dimensions
@@ -155,7 +148,7 @@ internal fun ManagePhotosContent(
 ) {
     Box(modifier = modifier) {
         if (photos.isNotEmpty()) {
-            ImageGridScreen(
+            ImageListScreen(
                 modifier = Modifier
                     .fillMaxSize(),
                 contentPadding = PaddingValues(
@@ -188,7 +181,7 @@ internal fun ManagePhotosContent(
 }
 
 @Composable
-fun ImageGridScreen(
+fun ImageListScreen(
     photos: List<Photo>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp),
@@ -264,13 +257,13 @@ fun ImageCard(
                         .align(Alignment.BottomEnd),
                     horizontalArrangement = Arrangement.spacedBy(dimensions.spacing_s),
                 ) {
-                    RoundIconButton(
+                    CURoundIconButton(
                         painter = painterResource(id = Rcommon.drawable.ic_edit_24),
                         iconTint = colors.onTertiary,
                         backgroundColor = colors.tertiary,
                         onClick = { onEditClick(photo.id) },
                     )
-                    RoundIconButton(
+                    CURoundIconButton(
                         painter = painterResource(id = Rcommon.drawable.ic_delete_24),
                         iconTint = colors.onTertiary,
                         backgroundColor = colors.tertiary,
@@ -279,32 +272,6 @@ fun ImageCard(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun RoundIconButton(
-    onClick: () -> Unit,
-    painter: Painter,
-    modifier: Modifier = Modifier,
-    contentDescription: String? = null,
-    backgroundColor: Color = colors.primary,
-    iconTint: Color = Color.White,
-    size: Dp = dimensions.floating_button_m,
-) {
-    Box(
-        modifier = modifier
-            .size(size)
-            .clip(CircleShape)
-            .background(backgroundColor)
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center,
-    ) {
-        Icon(
-            painter = painter,
-            contentDescription = contentDescription,
-            tint = iconTint,
-        )
     }
 }
 

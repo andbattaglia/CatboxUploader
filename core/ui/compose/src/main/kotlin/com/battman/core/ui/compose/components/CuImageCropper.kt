@@ -1,4 +1,4 @@
-package com.battman.catboxuploader.feature.managephotos.ui.components
+package com.battman.core.ui.compose.components
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
