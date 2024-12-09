@@ -45,11 +45,50 @@ fun CUButton(
     }
 }
 
+@Composable
+fun CUNegativeButton(
+    label: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+) {
+    Button(
+        modifier = modifier
+            .height(dimensions.button_size_L),
+        colors = ButtonDefaults.buttonColors(
+            contentColor = colors.buttonNegativeContent,
+            containerColor = colors.buttonNegativeContainer,
+        ),
+        enabled = enabled,
+        shape = RoundedCornerShape(dimensions.roundCorner_M),
+        onClick = onClick,
+    ) {
+        Text(
+            modifier = Modifier
+                .padding(dimensions.spacing_xs),
+            fontFamily = outfitFontFamily,
+            style = typography.headlineSmall,
+            text = label,
+        )
+    }
+}
+
 @Preview
 @Composable
 internal fun CUButtonPreview() {
     CatboxUploaderTheme {
         CUButton(
+            label = "Button",
+            onClick = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+internal fun CUNegativeButtonPreview() {
+    CatboxUploaderTheme {
+        CUNegativeButton(
             label = "Button",
             onClick = {},
         )

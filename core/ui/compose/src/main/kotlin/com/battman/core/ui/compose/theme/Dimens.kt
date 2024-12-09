@@ -25,11 +25,15 @@ class Dimensions(
     val thickness_S: Dp,
     val thickness_M: Dp,
     val thickness_L: Dp,
+    val stroke_S: Dp,
+    val stroke_M: Dp,
+    val stroke_L: Dp,
     val button_size_L: Dp,
     val elevation: Dp,
     val elevationNone: Dp = 0.dp,
     val minimumToolbarHeight: Dp = 52.dp,
     val indeterminateCircularProgress: Dp = 52.dp,
+    val updateCircularProgress: Dp,
 )
 
 internal val defaultDimensions = Dimensions(
@@ -53,8 +57,12 @@ internal val defaultDimensions = Dimensions(
     thickness_S = 1.dp,
     thickness_M = 2.dp,
     thickness_L = 4.dp,
+    stroke_S = 4.dp,
+    stroke_M = 8.dp,
+    stroke_L = 16.dp,
     button_size_L = 60.dp,
     elevation = 4.dp,
+    updateCircularProgress = 150.dp,
 )
 
 internal val LocalDimensions = staticCompositionLocalOf {
