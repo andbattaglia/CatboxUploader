@@ -2,6 +2,7 @@ package com.battman.catboxuploader.feature.managephotos.ui
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.battman.catboxuploader.domain.models.UploadDigest
 import com.battman.catboxuploader.domain.usecases.DeleteSelectedPhotoUseCase
 import com.battman.catboxuploader.domain.usecases.EditSelectedPhotoUseCase
 import com.battman.catboxuploader.domain.usecases.GetSelectedPhotoByIdUseCase
@@ -14,12 +15,19 @@ import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.U
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnDeleteClick
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnEditClick
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnRefresh
+import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnStopUploadClick
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnUploadClick
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiState
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiState.EditMode
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiState.Loading
 import com.battman.core.ui.mvi.MVIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,8 +38,9 @@ internal class ManagePhotosModel @Inject constructor(
     private val editSelectedPhotoUseCase: EditSelectedPhotoUseCase,
     private val deleteSelectedPhotoUseCase: DeleteSelectedPhotoUseCase,
     private val uploadSelectedPhotosUseCase: UploadSelectedPhotosUseCase,
-) :
-    MVIModel<UiState, UiIntent, UiEvent>() {
+) : MVIModel<UiState, UiIntent, UiEvent>() {
+
+    private var uploadJob: Job? = null
 
     override fun createInitialState() = Loading
 
@@ -39,6 +48,10 @@ internal class ManagePhotosModel @Inject constructor(
         when (intent) {
             is OnUploadClick -> {
                 uploadPhotos()
+            }
+            is OnStopUploadClick -> {
+                cancelUpload()
+                fetchSelectedPhotos()
             }
             is OnEditClick -> {
                 performEditClick(intent.photoId)
@@ -126,13 +139,34 @@ internal class ManagePhotosModel @Inject constructor(
         }
     }
 
+    private fun cancelUpload() {
+        uploadJob?.cancel()
+    }
+
     private fun uploadPhotos() {
-        viewModelScope.launch {
+        uploadJob = viewModelScope.launch {
             uploadSelectedPhotosUseCase.execute(UploadSelectedPhotosUseCase.Params)
-                .fold(
-                    ifRight = { albumId -> },
-                    ifLeft = { error -> },
-                )
+                .flowOn(Dispatchers.Main)
+                .onEach { uploadDigest ->
+                    when (uploadDigest) {
+                        is UploadDigest.Progress -> {
+                            setState { UiState.UploadMode(index = uploadDigest.index, total = uploadDigest.total, progress = uploadDigest.progress) }
+                        }
+                        is UploadDigest.Success -> {
+                            sendEvent { UiEvent.NavigateToResult }
+                        }
+                        is UploadDigest.Error -> {
+                            setState {
+                                UiState.Error(
+                                    titleRes = uploadDigest.errorType.toMessageTitle(),
+                                    descriptionRes = uploadDigest.errorType.toMessageDescription(),
+                                )
+                            }
+                        }
+                    }
+                }
+                .debounce(16)
+                .collect()
         }
     }
 

@@ -17,6 +17,7 @@ import com.battman.core.dispatcher.api.IoDispatcher
 import com.battman.data.network.utils.ProgressRequestBody
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -73,6 +74,7 @@ class PhotoRepository @Inject constructor(
                     uploadPhoto(
                         photo = photo,
                         progress = { progress ->
+                            delay(16)
                             emit(UploadDigest.Progress(index = index, total = cache.values.size, progress = progress))
                         },
                         success = { url ->

@@ -2,4 +2,6 @@
 <resources>
     <string name="manage_photos_title">Manage photos</string>
     <string name="manage_photos_button_upload">Upload photos</string>
+    <string name="manage_photos_uploading">Uploading %1$d/%2$d</string>
+    <string name="manage_photos_stop">Stop upload</string>
 </resources>

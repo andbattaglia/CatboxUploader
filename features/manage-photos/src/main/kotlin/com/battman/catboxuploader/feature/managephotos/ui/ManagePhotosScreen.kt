@@ -8,18 +8,23 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,10 +35,12 @@ import com.battman.catboxuploader.domain.models.Photo
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnDeleteClick
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnEditClick
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnEditSaveClick
+import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnStopUploadClick
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiIntent.OnUploadClick
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiState
 import com.battman.core.ui.compose.components.CUButton
 import com.battman.core.ui.compose.components.CUMessagePage
+import com.battman.core.ui.compose.components.CUNegativeButton
 import com.battman.core.ui.compose.components.CURoundIconButton
 import com.battman.core.ui.compose.components.CUTopAppBar
 import com.battman.core.ui.compose.components.CircularIndicatorOverlay
@@ -60,6 +67,7 @@ internal fun ManagePhotosScreen(
     ManagePhotosScreen(
         state = state,
         onUploadClick = { processIntent(OnUploadClick) },
+        onStopUploadClick = { processIntent(OnStopUploadClick) },
         onEditClick = { photoId -> processIntent(OnEditClick(photoId)) },
         onEditSaveClick = { photoId, uri -> processIntent(OnEditSaveClick(photoId, uri.toString())) },
         onDeleteClick = { photoId -> processIntent(OnDeleteClick(photoId)) },
@@ -72,6 +80,7 @@ internal fun ManagePhotosScreen(
     state: UiState,
     modifier: Modifier = Modifier,
     onUploadClick: () -> Unit = {},
+    onStopUploadClick: () -> Unit = {},
     onEditClick: (Long) -> Unit = {},
     onEditSaveClick: (Long, Uri) -> Unit = { _, _ -> },
     onDeleteClick: (Long) -> Unit = {},
@@ -131,6 +140,16 @@ internal fun ManagePhotosScreen(
                     onCancelled = {
                         onRefresh()
                     },
+                )
+            }
+            is UiState.UploadMode -> {
+                UploadModeContent(
+                    modifier = Modifier
+                        .padding(paddingValues),
+                    index = state.index,
+                    total = state.total,
+                    progress = state.progress,
+                    onStopUploadClick = onStopUploadClick,
                 )
             }
         }
@@ -257,18 +276,26 @@ fun ImageCard(
                         .align(Alignment.BottomEnd),
                     horizontalArrangement = Arrangement.spacedBy(dimensions.spacing_s),
                 ) {
-                    CURoundIconButton(
-                        painter = painterResource(id = Rcommon.drawable.ic_edit_24),
-                        iconTint = colors.onTertiary,
-                        backgroundColor = colors.tertiary,
-                        onClick = { onEditClick(photo.id) },
-                    )
-                    CURoundIconButton(
-                        painter = painterResource(id = Rcommon.drawable.ic_delete_24),
-                        iconTint = colors.onTertiary,
-                        backgroundColor = colors.tertiary,
-                        onClick = { onDeleteClick(photo.id) },
-                    )
+                    if (photo.uploaded) {
+                        CURoundIconButton(
+                            painter = painterResource(id = Rcommon.drawable.ic_check_24),
+                            iconTint = colors.onPrimary,
+                            backgroundColor = colors.tertiary,
+                        )
+                    } else {
+                        CURoundIconButton(
+                            painter = painterResource(id = Rcommon.drawable.ic_edit_24),
+                            iconTint = colors.onPrimary,
+                            backgroundColor = colors.primary,
+                            onClick = { onEditClick(photo.id) },
+                        )
+                        CURoundIconButton(
+                            painter = painterResource(id = Rcommon.drawable.ic_delete_24),
+                            iconTint = colors.onPrimary,
+                            backgroundColor = colors.primary,
+                            onClick = { onDeleteClick(photo.id) },
+                        )
+                    }
                 }
             }
         }
@@ -291,6 +318,62 @@ fun EditModeContent(
             onCancelled()
         },
     )
+}
+
+@Composable
+fun UploadModeContent(
+    index: Int,
+    total: Int,
+    progress: Int,
+    modifier: Modifier = Modifier,
+    onStopUploadClick: () -> Unit = {},
+) {
+    Log.d("UploadModeContent", "index: $index, total: $total, progress: $progress")
+
+    Box(
+        modifier = modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(dimensions.updateCircularProgress),
+                    strokeWidth = dimensions.stroke_L,
+                    strokeCap = StrokeCap.Butt,
+                    color = colors.primary,
+                )
+
+                Text(
+                    text = "$progress%",
+                    style = typography.titleLarge,
+                    color = colors.onBackground,
+                )
+            }
+
+            Spacer(modifier = Modifier.height(dimensions.spacing_l))
+
+            Text(
+                text = stringResource(R.string.manage_photos_uploading, index + 1, total),
+                style = typography.titleLarge,
+                color = colors.onBackground,
+            )
+        }
+
+        CUNegativeButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(dimensions.spacing_m),
+            label = stringResource(R.string.manage_photos_stop),
+            onClick = { onStopUploadClick() },
+        )
+    }
 }
 
 @Preview(showBackground = true)
@@ -328,6 +411,20 @@ fun ManagePhotosContentEmptyPreview() {
             modifier = Modifier
                 .fillMaxSize(),
             photos = emptyList(),
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ManagePhotosUploadPreview() {
+    CatboxUploaderTheme {
+        UploadModeContent(
+            modifier = Modifier
+                .fillMaxSize(),
+            index = 1,
+            total = 5,
+            progress = 20,
         )
     }
 }
