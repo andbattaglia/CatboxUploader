@@ -8,4 +8,6 @@ android {
 
 dependencies {
     api(libs.bundles.compose)
+
+    implementation(libs.android.image.cropper)
 }
