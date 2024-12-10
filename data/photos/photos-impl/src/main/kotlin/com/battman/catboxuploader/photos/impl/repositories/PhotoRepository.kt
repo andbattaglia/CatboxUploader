@@ -9,6 +9,7 @@ import com.battman.catboxuploader.domain.models.ErrorType
 import com.battman.catboxuploader.domain.models.Photo
 import com.battman.catboxuploader.domain.models.UploadDigest
 import com.battman.catboxuploader.photos.api.repositories.IPhotoRepository
+import com.battman.catboxuploader.photos.di.BuildConfig
 import com.battman.catboxuploader.photos.impl.datasource.CatboxApiContract
 import com.battman.catboxuploader.photos.impl.datasource.ContentResolverDatasource
 import com.battman.catboxuploader.photos.impl.models.toDomain
@@ -111,8 +112,7 @@ class PhotoRepository @Inject constructor(
         error: suspend (error: ErrorType) -> Unit,
     ) {
         val reqType = "fileupload".toRequestBody("text/plain".toMediaTypeOrNull())
-        val userHashBody = ***REMOVED***.toRequestBody("text/plain".toMediaTypeOrNull())
-
+        val userHashBody = BuildConfig.CATBOX_USER_HASH.toRequestBody("text/plain".toMediaTypeOrNull())
         val fileUri = Uri.parse(photo.contentUri)
         val fileName = contentResolverHelper.getFileName(fileUri)
 
@@ -125,7 +125,7 @@ class PhotoRepository @Inject constructor(
             }
             val fileToUpload = MultipartBody.Part.createFormData("fileToUpload", fileName, progressBody)
 
-            val response = catboxApiContract.createAlbum(reqType, userHashBody, fileToUpload)
+            val response = catboxApiContract.uploadPhoto(reqType, userHashBody, fileToUpload)
             if (response.isSuccessful) {
                 response.body()?.let {
                     val result = it.string()

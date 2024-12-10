@@ -1,3 +1,5 @@
+import com.battman.gradle.plugins.extensions.readProperties
+
 plugins {
     id("battman.android.library")
     alias(libs.plugins.kotlin.serialization)
@@ -9,11 +11,14 @@ android {
     buildFeatures.buildConfig = true
 
     buildTypes {
+        val properties = rootProject.readProperties("local.properties")
         debug {
             buildConfigField("String", "BASE_URL", "\"https://catbox.moe/\"")
+            buildConfigField("String", "CATBOX_USER_HASH", properties["catbox_user_hash"] as String? ?: "\"\"")
         }
         release {
             buildConfigField("String", "BASE_URL", "\"https://catbox.moe/\"")
+            buildConfigField("String", "CATBOX_USER_HASH", "\"\"")
         }
     }
 }

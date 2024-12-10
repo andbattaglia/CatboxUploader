@@ -12,7 +12,7 @@ interface CatboxApiContract {
 
     @Multipart
     @POST("user/api.php")
-    suspend fun createAlbum(
+    suspend fun uploadPhoto(
         @Part("reqtype") reqType: RequestBody,
         @Part("userhash") userHash: RequestBody,
         @Part fileToUpload: MultipartBody.Part,

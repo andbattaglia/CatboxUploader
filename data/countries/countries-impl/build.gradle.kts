@@ -1,3 +1,5 @@
+import com.battman.gradle.plugins.extensions.readProperties
+
 plugins {
     id("battman.android.library")
     alias(libs.plugins.kotlin.serialization)
@@ -9,13 +11,14 @@ android {
     buildFeatures.buildConfig = true
 
     buildTypes {
+        val properties = rootProject.readProperties("local.properties")
         debug {
             buildConfigField("String", "BASE_URL", "\"https://api.photoforse.online/\"")
-            buildConfigField("String", "API_KEY", "\"AIzaSyCccmdkjGe_9Yt-INL2rCJTNgoS4CXsRDc\"")
+            buildConfigField("String", "API_KEY", properties["photoforse_apikey"] as String)
         }
         release {
             buildConfigField("String", "BASE_URL", "\"https://api.photoforse.online/\"")
-            buildConfigField("String", "API_KEY", "\"AIzaSyCccmdkjGe_9Yt-INL2rCJTNgoS4CXsRDc\"")
+            buildConfigField("String", "API_KEY", properties["photoforse_apikey"] as String)
         }
     }
 }
