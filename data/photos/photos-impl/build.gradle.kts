@@ -27,4 +27,6 @@ dependencies {
     implementation(projects.data.networkExt)
 
     implementation(libs.javax.inject)
+    implementation(libs.dagger.hilt.android)
+    implementation(libs.compressor)
 }
