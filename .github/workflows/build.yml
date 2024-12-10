@@ -1,0 +1,29 @@
+name: Android CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Setup
+        uses: ./.github/actions/build-setup
+
+      - name: Update Username from Secrets
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+        run: echo photoforse_apikey="$API_KEY" > ./local.properties
+
+      - name: Lint Check
+        run: ./gradlew spotlessCheck --continue
+
+      - name: Build with Gradle
+        run: ./gradlew build --stacktrace
+
+      - name: Test with Gradle
+        run: ./gradlew test --stacktrace
