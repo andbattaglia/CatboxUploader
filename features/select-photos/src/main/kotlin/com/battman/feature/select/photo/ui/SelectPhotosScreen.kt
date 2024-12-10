@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -320,11 +321,17 @@ fun ImageCard(
         shape = RoundedCornerShape(dimensions.roundCorner_S),
         onClick = { onItemSelected(photo.id) },
     ) {
-        AsyncImage(
-            model = photo.contentUri,
-            contentDescription = photo.name,
-            contentScale = ContentScale.Crop,
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colors.surfaceContainer),
+        ) {
+            AsyncImage(
+                model = photo.contentUri,
+                contentDescription = photo.name,
+                contentScale = ContentScale.Crop,
+            )
+        }
     }
 }
 
