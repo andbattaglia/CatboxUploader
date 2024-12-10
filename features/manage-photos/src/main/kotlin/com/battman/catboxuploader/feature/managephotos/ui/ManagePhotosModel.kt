@@ -20,9 +20,10 @@ import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.U
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiState
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiState.EditMode
 import com.battman.catboxuploader.feature.managephotos.ui.ManagePhotosContract.UiState.Loading
+import com.battman.core.dispatcher.api.MainDispatcher
 import com.battman.core.ui.mvi.MVIModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
@@ -38,6 +39,7 @@ internal class ManagePhotosModel @Inject constructor(
     private val editSelectedPhotoUseCase: EditSelectedPhotoUseCase,
     private val deleteSelectedPhotoUseCase: DeleteSelectedPhotoUseCase,
     private val uploadSelectedPhotosUseCase: UploadSelectedPhotosUseCase,
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
 ) : MVIModel<UiState, UiIntent, UiEvent>() {
 
     private var uploadJob: Job? = null
@@ -146,7 +148,7 @@ internal class ManagePhotosModel @Inject constructor(
     private fun uploadPhotos() {
         uploadJob = viewModelScope.launch {
             uploadSelectedPhotosUseCase.execute(UploadSelectedPhotosUseCase.Params)
-                .flowOn(Dispatchers.Main)
+                .flowOn(mainDispatcher)
                 .onEach { uploadDigest ->
                     when (uploadDigest) {
                         is UploadDigest.Progress -> {

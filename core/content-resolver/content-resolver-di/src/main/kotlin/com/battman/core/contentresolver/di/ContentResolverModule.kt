@@ -23,6 +23,7 @@ class ContentResolverModule {
 
     @Provides
     fun providesContentResolverHelper(
+        @ApplicationContext context: Context,
         contentResolver: ContentResolver,
-    ): IContentResolverHelper = ContentResolverHelper(contentResolver)
+    ): IContentResolverHelper = ContentResolverHelper(context.cacheDir, contentResolver)
 }

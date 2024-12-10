@@ -8,6 +8,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.dispatcher.dispatcherApi)
     implementation(projects.core.ui.compose)
     implementation(projects.core.ui.mvi)
     implementation(projects.core.ui.navigation)

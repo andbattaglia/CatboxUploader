@@ -1,6 +1,5 @@
 package com.battman.catboxuploader.photos.impl.repositories
 
-import android.content.Context
 import android.net.Uri
 import android.util.Log
 import arrow.core.Either
@@ -15,7 +14,6 @@ import com.battman.catboxuploader.photos.impl.models.toDomain
 import com.battman.core.contentresolver.api.IContentResolverHelper
 import com.battman.core.dispatcher.api.IoDispatcher
 import com.battman.data.network.utils.ProgressRequestBody
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
@@ -31,7 +29,6 @@ class PhotoRepository @Inject constructor(
     private val contentResolverDatasource: ContentResolverDatasource,
     private val catboxApiContract: CatboxApiContract,
     private val contentResolverHelper: IContentResolverHelper,
-    @ApplicationContext private val context: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : IPhotoRepository {
 
@@ -115,7 +112,7 @@ class PhotoRepository @Inject constructor(
         val fileUri = Uri.parse(photo.contentUri)
         val fileName = contentResolverHelper.getFileName(fileUri)
 
-        contentResolverHelper.uriToFile(context, fileUri)?.let { file ->
+        contentResolverHelper.uriToFile(fileUri)?.let { file ->
             val progressBody = ProgressRequestBody(file, "image/jpeg")
             val progressFlow = progressBody.progressFlow()
             progressFlow.collect { progress ->

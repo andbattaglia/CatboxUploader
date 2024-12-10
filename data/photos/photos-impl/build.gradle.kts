@@ -26,7 +26,5 @@ dependencies {
     implementation(projects.core.network.networkApi)
     implementation(projects.data.networkExt)
 
-    implementation(libs.dagger.hilt.android)
-
     implementation(libs.javax.inject)
 }

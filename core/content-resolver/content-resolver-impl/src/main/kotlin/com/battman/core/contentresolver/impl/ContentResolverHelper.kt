@@ -1,7 +1,6 @@
 package com.battman.core.contentresolver.impl
 
 import android.content.ContentResolver
-import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
 import com.battman.core.contentresolver.api.IContentResolverHelper
@@ -9,14 +8,15 @@ import java.io.File
 import javax.inject.Inject
 
 class ContentResolverHelper @Inject constructor(
+    private val cacheDir: File,
     private val contentResolver: ContentResolver,
 ) : IContentResolverHelper {
 
-    override fun uriToFile(context: Context, uri: Uri): File? {
+    override fun uriToFile(uri: Uri): File? {
         return when (uri.scheme) {
             "file" -> uri.path?.let { File(it) }
             "content" -> {
-                val file = File(context.cacheDir, "temp_file_${System.currentTimeMillis()}.tmp")
+                val file = File(cacheDir, "temp_file_${System.currentTimeMillis()}.tmp")
                 try {
                     contentResolver.openInputStream(uri)?.use { inputStream ->
                         file.outputStream().use { outputStream ->
