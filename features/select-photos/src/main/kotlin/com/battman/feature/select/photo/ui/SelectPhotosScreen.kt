@@ -26,6 +26,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,6 +34,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import coil3.request.CachePolicy
+import coil3.request.ImageRequest
 import com.battman.core.ui.compose.components.CUButton
 import com.battman.core.ui.compose.components.CUMessagePage
 import com.battman.core.ui.compose.components.CUTopAppBar
@@ -202,18 +205,47 @@ internal fun RequestMediaPermissionView(
                 content = content,
             )
         } else {
-            RequestMediaPermissionViewPreTiramisu(content = content)
+            RequestMediaPermissionViewPreTiramisu(
+                onNavigateToPermissionSettings = onNavigateToPermissionSettings,
+                onPermissionGranted = onPermissionGranted,
+                content = content
+            )
         }
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 internal fun RequestMediaPermissionViewPreTiramisu(
     content: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    onPermissionGranted: () -> Unit = {},
+    onNavigateToPermissionSettings: () -> Unit = {},
 ) {
+    val view = LocalView.current
+    val readStoragePermissionState =
+        if (view.isInEditMode) {
+            null
+        } else {
+            rememberPermissionState(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+
     Box(modifier = modifier) {
-        content()
+        if (readStoragePermissionState?.status?.isGranted == true) {
+            LaunchedEffect(Unit) { onPermissionGranted() }
+            content()
+        } else {
+            RequestMediaPermission(
+                modifier = Modifier.fillMaxSize(),
+                onRequestClick = {
+                    if (readStoragePermissionState?.status?.shouldShowRationale == true) {
+                        onNavigateToPermissionSettings()
+                    } else {
+                        readStoragePermissionState?.launchPermissionRequest()
+                    }
+                },
+            )
+        }
     }
 }
 
@@ -239,43 +271,54 @@ internal fun RequestMediaPermissionViewTiramisu(
             LaunchedEffect(Unit) { onPermissionGranted() }
             content()
         } else {
-            Column(
-                modifier
-                    .fillMaxSize()
-                    .padding(horizontal = dimensions.spacing_l),
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(R.string.select_photos_permission_title),
-                    textAlign = TextAlign.Center,
-                    color = colors.onBackground,
-                    style = typography.titleLarge,
-                    fontFamily = outfitFontFamily,
-                )
-                Spacer(modifier = Modifier.height(dimensions.spacing_m))
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(R.string.select_photos_permission_description),
-                    textAlign = TextAlign.Center,
-                    color = colors.onBackground,
-                    style = typography.bodyMedium,
-                    fontFamily = outfitFontFamily,
-                )
-                Spacer(modifier = Modifier.height(dimensions.spacing_m))
-                CUButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = stringResource(R.string.select_photos_permission_button),
-                    onClick = {
-                        if (readStoragePermissionState?.status?.shouldShowRationale == true) {
-                            onNavigateToPermissionSettings()
-                        } else {
-                            readStoragePermissionState?.launchPermissionRequest()
-                        }
-                    },
-                )
-            }
+            RequestMediaPermission(
+                modifier = Modifier.fillMaxSize(),
+                onRequestClick = {
+                    if (readStoragePermissionState?.status?.shouldShowRationale == true) {
+                        onNavigateToPermissionSettings()
+                    } else {
+                        readStoragePermissionState?.launchPermissionRequest()
+                    }
+                },
+            )
         }
+    }
+}
+
+@Composable
+fun RequestMediaPermission(
+    modifier: Modifier = Modifier,
+    onRequestClick: () -> Unit = {},
+){
+    Column(
+        modifier
+            .fillMaxSize()
+            .padding(horizontal = dimensions.spacing_l),
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(R.string.select_photos_permission_title),
+            textAlign = TextAlign.Center,
+            color = colors.onBackground,
+            style = typography.titleLarge,
+            fontFamily = outfitFontFamily,
+        )
+        Spacer(modifier = Modifier.height(dimensions.spacing_m))
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(R.string.select_photos_permission_description),
+            textAlign = TextAlign.Center,
+            color = colors.onBackground,
+            style = typography.bodyMedium,
+            fontFamily = outfitFontFamily,
+        )
+        Spacer(modifier = Modifier.height(dimensions.spacing_m))
+        CUButton(
+            modifier = Modifier.fillMaxWidth(),
+            label = stringResource(R.string.select_photos_permission_button),
+            onClick = onRequestClick,
+        )
     }
 }
 
@@ -311,6 +354,7 @@ fun ImageCard(
     modifier: Modifier = Modifier,
     onItemSelected: (Long) -> Unit = {},
 ) {
+    val context = LocalContext.current
     CuCard(
         modifier = modifier
             .fillMaxWidth()
@@ -326,8 +370,14 @@ fun ImageCard(
                 .fillMaxSize()
                 .background(colors.surfaceContainer),
         ) {
+            val imageRequest = ImageRequest.Builder(context)
+                .data(photo.contentUri)
+                .diskCachePolicy(CachePolicy.ENABLED)
+                .memoryCachePolicy(CachePolicy.ENABLED)
+                .build()
+
             AsyncImage(
-                model = photo.contentUri,
+                model = imageRequest,
                 contentDescription = photo.name,
                 contentScale = ContentScale.Crop,
             )
