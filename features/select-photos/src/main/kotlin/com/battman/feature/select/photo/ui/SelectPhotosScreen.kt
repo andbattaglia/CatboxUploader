@@ -208,7 +208,7 @@ internal fun RequestMediaPermissionView(
             RequestMediaPermissionViewPreTiramisu(
                 onNavigateToPermissionSettings = onNavigateToPermissionSettings,
                 onPermissionGranted = onPermissionGranted,
-                content = content
+                content = content,
             )
         }
     }
@@ -289,7 +289,7 @@ internal fun RequestMediaPermissionViewTiramisu(
 fun RequestMediaPermission(
     modifier: Modifier = Modifier,
     onRequestClick: () -> Unit = {},
-){
+) {
     Column(
         modifier
             .fillMaxSize()
