@@ -57,11 +57,16 @@ import com.battman.catboxuploader.feature.common.R as Rcommon
 @Composable
 internal fun ManagePhotosScreen(
     viewModel: ManagePhotosModel,
+    navigateToCloudGallery: () -> Unit,
 ) {
     val (state, events, processIntent) = viewModel
 
     LaunchedEffect(key1 = Unit) {
-        events.collect {}
+        events.collect {
+            when (it) {
+                is ManagePhotosContract.UiEvent.NavigateToResult -> navigateToCloudGallery()
+            }
+        }
     }
 
     ManagePhotosScreen(
@@ -280,7 +285,7 @@ fun ImageCard(
                         CURoundIconButton(
                             painter = painterResource(id = Rcommon.drawable.ic_check_24),
                             iconTint = colors.onPrimary,
-                            backgroundColor = colors.tertiary,
+                            backgroundColor = colors.primary,
                         )
                     } else {
                         CURoundIconButton(

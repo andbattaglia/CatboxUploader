@@ -8,10 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.battman.catboxuploader.feature.cloudgallery.ui.navigation.cloudGalleryScreen
+import com.battman.catboxuploader.feature.cloudgallery.ui.navigation.navigateToCloudGallery
 import com.battman.catboxuploader.feature.managephotos.ui.navigation.managePhotosScreen
 import com.battman.catboxuploader.feature.managephotos.ui.navigation.navigateToManagePhotos
+import com.battman.feature.select.country.ui.navigation.SELECT_COUNTRY_ROUTE
 import com.battman.feature.select.country.ui.navigation.selectCountryScreen
-import com.battman.feature.select.photo.ui.navigation.SELECT_PHOTOS_ROUTE
 import com.battman.feature.select.photo.ui.navigation.navigateToSelectPhotos
 import com.battman.feature.select.photo.ui.navigation.selectPhotosScreen
 
@@ -22,8 +24,7 @@ fun RootHost() {
 
     NavHost(
         navController = navController,
-//        startDestination = SELECT_COUNTRY_ROUTE,
-        startDestination = SELECT_PHOTOS_ROUTE,
+        startDestination = SELECT_COUNTRY_ROUTE,
     ) {
         selectCountryScreen(
             onNavigateToGallery = { navController.navigateToSelectPhotos() },
@@ -34,7 +35,11 @@ fun RootHost() {
             onNavigateToUpload = { navController.navigateToManagePhotos() },
         )
 
-        managePhotosScreen()
+        managePhotosScreen(
+            onNavigateToCloudGallery = { navController.navigateToCloudGallery() },
+        )
+
+        cloudGalleryScreen()
     }
 }
 

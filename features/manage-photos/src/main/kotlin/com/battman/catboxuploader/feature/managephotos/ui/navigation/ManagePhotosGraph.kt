@@ -12,10 +12,13 @@ fun NavController.navigateToManagePhotos() {
     navigate(MANAGE_PHOTOS_ROUTE)
 }
 
-fun NavGraphBuilder.managePhotosScreen() {
+fun NavGraphBuilder.managePhotosScreen(
+    onNavigateToCloudGallery: () -> Unit,
+) {
     composable(route = MANAGE_PHOTOS_ROUTE) {
         ManagePhotosScreen(
             viewModel = hiltViewModel(),
+            navigateToCloudGallery = onNavigateToCloudGallery,
         )
     }
 }

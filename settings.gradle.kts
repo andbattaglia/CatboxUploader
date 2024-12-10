@@ -55,6 +55,7 @@ include(
     ":data:network-ext",
     ":domain:models",
     ":domain:usecases",
+    ":features:cloud-gallery",
     ":features:common",
     ":features:manage-photos",
     ":features:select-country",
