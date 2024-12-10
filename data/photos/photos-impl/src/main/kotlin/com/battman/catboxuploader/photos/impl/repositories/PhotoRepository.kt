@@ -68,34 +68,38 @@ class PhotoRepository @Inject constructor(
     }
 
     override fun upload() = flow {
-        cache.values
-            .forEachIndexed { index, photo ->
-                if (!photo.uploaded) {
-                    uploadPhoto(
-                        photo = photo,
-                        progress = { progress ->
-                            delay(16)
-                            emit(UploadDigest.Progress(index = index, total = cache.values.size, progress = progress))
-                        },
-                        success = { url ->
-                            Log.d("PhotoRepository", "Upload single photo success: $url")
-                        },
-                        error = {
-                            emit(
-                                UploadDigest.Error(
-                                    index = index,
-                                    total = cache.values.size,
-                                    errorType = it,
-                                ),
-                            )
-                        },
-                    )
+        try {
+            cache.values
+                .forEachIndexed { index, photo ->
+                    if (!photo.uploaded) {
+                        uploadPhoto(
+                            photo = photo,
+                            progress = { progress ->
+                                delay(16)
+                                emit(UploadDigest.Progress(index = index, total = cache.values.size, progress = progress))
+                            },
+                            success = { url ->
+                                Log.d("PhotoRepository", "Upload single photo success: $url")
+                            },
+                            error = {
+                                emit(
+                                    UploadDigest.Error(
+                                        index = index,
+                                        total = cache.values.size,
+                                        errorType = it,
+                                    ),
+                                )
+                            },
+                        )
+                    }
                 }
-            }
 
-        cache.values.forEach {
-            Log.d("PhotoRepository", "Upload success: ${it.uploadedLink}")
-            emit(UploadDigest.Success)
+            cache.values.forEach {
+                Log.d("PhotoRepository", "Upload success: ${it.uploadedLink}")
+                emit(UploadDigest.Success)
+            }
+        } catch (e: Exception) {
+            emit(UploadDigest.Error(index = 0, total = 0, errorType = ErrorType.Unknown(e.message ?: "Unknown error")))
         }
     }.flowOn(ioDispatcher)
 
