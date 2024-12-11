@@ -1,3 +1,5 @@
+import com.battman.gradle.plugins.extensions.readProperties
+
 plugins {
     id("battman.android.application")
     id("battman.android.hilt")
@@ -17,6 +19,16 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        val properties = rootProject.readProperties("local.properties")
+        create("release") {
+            storeFile = rootProject.file(".keystore/release.jks")
+            storePassword = properties["release.keystore.password"] as String?
+            keyAlias = properties["release.key.alias"] as String?
+            keyPassword = properties["release.key.password"] as String?
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -24,6 +36,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }
