@@ -4,8 +4,10 @@ import android.Manifest
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,13 +20,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -33,14 +35,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
+import coil3.compose.rememberAsyncImagePainter
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.battman.core.ui.compose.components.CUButton
 import com.battman.core.ui.compose.components.CUMessagePage
 import com.battman.core.ui.compose.components.CUTopAppBar
 import com.battman.core.ui.compose.components.CircularIndicatorOverlay
-import com.battman.core.ui.compose.components.CuCard
 import com.battman.core.ui.compose.theme.CatboxUploaderTheme
 import com.battman.core.ui.compose.theme.CatboxUploaderTheme.colors
 import com.battman.core.ui.compose.theme.CatboxUploaderTheme.dimensions
@@ -355,31 +357,36 @@ fun ImageCard(
     onItemSelected: (Long) -> Unit = {},
 ) {
     val context = LocalContext.current
-    CuCard(
+    Box(
         modifier = modifier
             .fillMaxWidth()
-            .aspectRatio(1f),
-        border = if (photo.selected) BorderStroke(dimensions.thickness_L, colors.primary) else null,
-        elevation = if (photo.selected) dimensions.elevation else dimensions.elevationNone,
-        showOverlay = photo.selected,
-        shape = RoundedCornerShape(dimensions.roundCorner_S),
-        onClick = { onItemSelected(photo.id) },
+            .aspectRatio(1f)
+            .background(colors.surfaceContainer)
+            .border(
+                width = if (photo.selected) dimensions.thickness_L else 0.dp,
+                color = if (photo.selected) colors.primary else colors.surfaceContainer,
+            )
+            .clickable { onItemSelected(photo.id) },
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colors.surfaceContainer),
-        ) {
-            val imageRequest = ImageRequest.Builder(context)
-                .data(photo.contentUri)
-                .diskCachePolicy(CachePolicy.ENABLED)
-                .memoryCachePolicy(CachePolicy.ENABLED)
-                .build()
+        val imageRequest = ImageRequest.Builder(context)
+            .data(photo.contentUri)
+            .crossfade(true)
+            .memoryCachePolicy(CachePolicy.ENABLED)
+            .build()
 
-            AsyncImage(
-                model = imageRequest,
-                contentDescription = photo.name,
-                contentScale = ContentScale.Crop,
+        val painter = rememberAsyncImagePainter(imageRequest, filterQuality = FilterQuality.Low)
+
+        Image(
+            painter = painter,
+            contentDescription = photo.name,
+            contentScale = ContentScale.Crop,
+        )
+
+        if (photo.selected) {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .background(colors.overlay.copy(alpha = 0.5f)),
             )
         }
     }
